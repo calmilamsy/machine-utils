@@ -1,14 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.glasslauncher.example.mixin",
+  "package": "net.glasslauncher.mods.machineutils.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ExampleMixin"
   ],
   "server": [
+    "server.MixinMinecraftServer"
   ],
   "client": [
+    "client.MixinGameRenderer",
+    "client.SoundHelperAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

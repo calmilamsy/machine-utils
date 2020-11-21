@@ -30,9 +30,13 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	mavenLocal()
 	maven {
 		name = "Jitpack"
 		url "https://jitpack.io/"
+	}
+	maven {
+		url "https://maven.glass-launcher.net/repo"
 	}
 }
 
@@ -64,6 +68,9 @@ dependencies {
 	compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation ("net.modificationstation:StationLoader:1.3.2:dev") {
+		changing true
+	}
 }
 
 processResources {
