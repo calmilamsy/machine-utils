@@ -17,7 +17,7 @@ public class MachineUtils implements StationMod, PostInit {
     public void preInit() {
         config = getDefaultConfig();
         generalConfig = config.getCategory("general");
-        PacketRegister.EVENT.register(new NetworkManager());
+        PacketRegister.EVENT.register(new NetworkManager(), getContainer().getMetadata());
 
         config.save();
     }
