@@ -68,9 +68,11 @@ dependencies {
 	compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation ("net.modificationstation:StationLoader:1.3.2:dev") {
-		changing true
-	}
+
+	compile project(":stationloader")
+//	modImplementation ("net.modificationstation:StationLoader:1.3.2:dev") {
+//		changing true
+//	}
 }
 
 processResources {
