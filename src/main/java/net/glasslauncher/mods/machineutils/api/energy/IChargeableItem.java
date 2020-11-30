@@ -5,9 +5,22 @@
 package net.glasslauncher.mods.machineutils.api.energy;
 
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationloader.api.client.gui.HasCustomTooltip;
+import net.modificationstation.stationloader.api.client.gui.Colors;
 
-public interface IChargeableItem
+import java.util.ArrayList;
+import java.util.List;
+
+public interface IChargeableItem extends HasCustomTooltip
 {
 
     int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag);
+
+    @Override
+    default List<String> getToolTip(String string, ItemInstance itemInstance) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(string);
+        arrayList.add(Colors.RED + ((itemInstance.getType().getDurability()-itemInstance.getDamage())) + Colors.WHITE + "/" + Colors.DARK_AQUA + itemInstance.getType().getDurability() + Colors.WHITE + " EU" + Colors.WHITE + " stored");
+        return arrayList;
+    }
 }
