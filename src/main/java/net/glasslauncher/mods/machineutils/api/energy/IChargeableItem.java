@@ -15,12 +15,13 @@ public interface IChargeableItem extends HasCustomTooltip
 {
 
     int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag);
+    int getRatio();
 
     @Override
     default List<String> getToolTip(String originalTooltip, ItemInstance itemInstance) {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add(originalTooltip);
-        arrayList.add(Colors.RED + ((itemInstance.getType().getDurability()-itemInstance.getDamage())) + Colors.WHITE + "/" + Colors.DARK_AQUA + itemInstance.getType().getDurability() + Colors.WHITE + " EU stored");
+        arrayList.add(Colors.RED + ((itemInstance.getType().getDurability()-itemInstance.getDamage())*getRatio()) + Colors.WHITE + "/" + Colors.DARK_AQUA + (itemInstance.getType().getDurability()*getRatio()) + Colors.WHITE + " EU stored");
         return arrayList;
     }
 }
