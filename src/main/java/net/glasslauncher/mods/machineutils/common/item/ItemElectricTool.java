@@ -109,6 +109,11 @@ class ItemElectricTool extends ToolBase
         return i;
     }
 
+    @Override
+    public int getRatio() {
+        return ratio;
+    }
+
     public String getTextureFile()
     {
         return "/net/glasslauncher/mods/ic2sl/sprites/item_0.png";

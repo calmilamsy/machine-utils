@@ -79,6 +79,11 @@ public class ItemArmorBatpack extends Armour
         return i;
     }
 
+    @Override
+    public int getRatio() {
+        return ratio;
+    }
+
     public int tier;
     public int sendTier;
     public int ratio;
