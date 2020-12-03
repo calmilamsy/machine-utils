@@ -14,10 +14,10 @@ public class MachineUtils implements StationMod, PostInit {
     public static boolean oresRequired = false;
 
     @Override
-    public void preInit() {
+    public void init() {
         config = getDefaultConfig();
         generalConfig = config.getCategory("general");
-        PacketRegister.EVENT.register(new NetworkManager(), getContainer().getMetadata());
+        PacketRegister.EVENT.register(new NetworkManager(), getModID());
 
         config.save();
     }

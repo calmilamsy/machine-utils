@@ -76,7 +76,6 @@ public class NetworkManager implements PacketRegister
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             if (tileentity instanceof INetworkTileEntityEventListener) {
                 ((INetworkTileEntityEventListener) tileentity).onNetworkEvent(i);
-                System.out.println("Got packet");
             }
         }
         else {
