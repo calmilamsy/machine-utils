@@ -39,6 +39,7 @@ class ItemElectricTool extends ToolBase
         return super.getStrengthOnBlock(itemstack, block);
     }
 
+    @Override
     public boolean isEffectiveOn(BlockBase block)
     {
         for(int i = 0; i < mineables.length; i++)
@@ -52,11 +53,13 @@ class ItemElectricTool extends ToolBase
         return false;
     }
 
+    @Override
     public boolean postHit(ItemInstance itemstack, Living entityliving, Living entityliving1)
     {
         return true;
     }
 
+    @Override
     public boolean postMine(ItemInstance itemstack, int i, int j, int k, int l, Living entityliving)
     {
         return true;
@@ -89,6 +92,7 @@ class ItemElectricTool extends ToolBase
         }
     }
 
+    @Override
     public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag)
     {
         if(j < tier || itemstack.getDamage() == 1)

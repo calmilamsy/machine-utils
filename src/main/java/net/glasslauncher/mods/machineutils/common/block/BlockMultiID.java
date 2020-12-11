@@ -48,6 +48,7 @@ public abstract class BlockMultiID extends BlockWithEntity
         return (BlockMultiID) super.sounds(sounds);
     }
 
+    @Override
     public int method_1626(TileView iblockaccess, int i, int j, int k, int l)
     {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
@@ -62,11 +63,13 @@ public abstract class BlockMultiID extends BlockWithEntity
         }
     }
 
+    @Override
     public int getTextureForSide(int i, int j)
     {
         return j + sideAndFacingToSpriteOffset[i][3] * 16;
     }
 
+    @Override
     public boolean canUse(Level world, int i, int j, int k, PlayerBase entityplayer)
     {
         if(entityplayer.method_1373())
@@ -120,11 +123,13 @@ public abstract class BlockMultiID extends BlockWithEntity
 
     public abstract WrenchableMachineTileEntity getBlockEntity(int i);
 
+    @Override
     public void onBlockPlaced(Level world, int i, int j, int k) {
         TileEntityBase te = this.getBlockEntity(world.getTileMeta(i, j, k));
         world.setTileEntity(i, j, k, te);
     }
 
+    @Override
     public void onBlockRemoved(Level world, int i, int j, int k)
     {
         
@@ -143,6 +148,7 @@ public abstract class BlockMultiID extends BlockWithEntity
         super.onBlockRemoved(world, i, j, k);
     }
 
+    @Override
     public void afterPlaced(Level world, int i, int j, int k, Living entityliving)
     {
         if(!PlatformUtils.isSimulating())

@@ -44,18 +44,21 @@ public class WrenchableMachineTileEntity extends TileEntityBase
         NetworkManager.requestInitialTileEntityData(level, x, y, z);
     }
 
+    @Override
     public void readIdentifyingData(CompoundTag nbttagcompound)
     {
         super.readIdentifyingData(nbttagcompound);
         prevFacing = facing = nbttagcompound.getShort("facing");
     }
 
+    @Override
     public void writeIdentifyingData(CompoundTag nbttagcompound)
     {
         super.writeIdentifyingData(nbttagcompound);
         nbttagcompound.put("facing", facing);
     }
 
+    @Override
     public void tick()
     {
         if(!created)
@@ -99,6 +102,7 @@ public class WrenchableMachineTileEntity extends TileEntityBase
         return vector;
     }
 
+    @Override
     public void onNetworkUpdate(String s)
     {
         if(s.equals("active") && prevActive != active || s.equals("facing") && prevFacing != facing)
@@ -109,11 +113,13 @@ public class WrenchableMachineTileEntity extends TileEntityBase
         }
     }
 
+    @Override
     public boolean wrenchSetFacing(PlayerBase entityplayer, int i)
     {
         return false;
     }
 
+    @Override
     public void setFacing(short word0)
     {
         facing = word0;
@@ -124,11 +130,13 @@ public class WrenchableMachineTileEntity extends TileEntityBase
         prevFacing = word0;
     }
 
+    @Override
     public boolean wrenchRemove(PlayerBase entityplayer)
     {
         return true;
     }
 
+    @Override
     public float getWrenchDropRate()
     {
         return 1.0F;

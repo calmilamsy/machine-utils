@@ -26,16 +26,19 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
         inventory = new ItemInstance[i];
     }
 
+    @Override
     public int getInventorySize()
     {
         return inventory.length;
     }
 
+    @Override
     public ItemInstance getInventoryItem(int i)
     {
         return inventory[i];
     }
 
+    @Override
     public ItemInstance takeInventoryItem(int i, int j)
     {
         if(inventory[i] != null)
@@ -58,6 +61,7 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
         }
     }
 
+    @Override
     public void setInventoryItem(int i, ItemInstance itemstack)
     {
         inventory[i] = itemstack;
@@ -67,11 +71,13 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
         }
     }
 
+    @Override
     public int getMaxItemCount()
     {
         return 64;
     }
 
+    @Override
     public boolean canPlayerUse(PlayerBase entityplayer)
     {
         if(level.getTileEntity(x, y, z) != this)
@@ -83,8 +89,10 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
         }
     }
 
+    @Override
     public abstract String getContainerName();
 
+    @Override
     public void readIdentifyingData(CompoundTag nbttagcompound)
     {
         super.readIdentifyingData(nbttagcompound);
@@ -102,6 +110,7 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
 
     }
 
+    @Override
     public void writeIdentifyingData(CompoundTag nbttagcompound)
     {
         super.writeIdentifyingData(nbttagcompound);
