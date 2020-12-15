@@ -21,17 +21,15 @@ import java.util.Vector;
  * Not recommended for extending unless you know what you are doing, or just want a simple machine without an inventory.
  */
 public class WrenchableMachineTileEntity extends TileEntityBase
-    implements INetworkUpdateListener, IWrenchable
-{
+        implements INetworkUpdateListener, IWrenchable {
 
+    public boolean prevActive;
+    public short prevFacing;
     protected boolean created;
     private boolean active;
     private short facing;
-    public boolean prevActive;
-    public short prevFacing;
 
-    public WrenchableMachineTileEntity()
-    {
+    public WrenchableMachineTileEntity() {
         created = false;
         active = false;
         facing = 0;
@@ -39,63 +37,61 @@ public class WrenchableMachineTileEntity extends TileEntityBase
         prevFacing = 0;
     }
 
-    public void onCreated()
-    {
+    public void onCreated() {
         NetworkManager.requestInitialTileEntityData(level, x, y, z);
     }
 
     @Override
-    public void readIdentifyingData(CompoundTag nbttagcompound)
-    {
+    public void readIdentifyingData(CompoundTag nbttagcompound) {
         super.readIdentifyingData(nbttagcompound);
         prevFacing = facing = nbttagcompound.getShort("facing");
     }
 
     @Override
-    public void writeIdentifyingData(CompoundTag nbttagcompound)
-    {
+    public void writeIdentifyingData(CompoundTag nbttagcompound) {
         super.writeIdentifyingData(nbttagcompound);
         nbttagcompound.put("facing", facing);
     }
 
     @Override
-    public void tick()
-    {
-        if(!created)
-        {
+    public void tick() {
+        if (!created) {
             onCreated();
             created = true;
         }
     }
 
-    public boolean getActive()
-    {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean flag)
-    {
+    public void setActive(boolean flag) {
         active = flag;
-        if(prevActive != flag)
-        {
+        if (prevActive != flag) {
             NetworkManager.updateTileEntityField(this, "active");
         }
         prevActive = flag;
     }
 
-    public void setActiveWithoutNotify(boolean flag)
-    {
+    public void setActiveWithoutNotify(boolean flag) {
         active = flag;
         prevActive = flag;
     }
 
-    public short getFacing()
-    {
+    public short getFacing() {
         return facing;
     }
 
-    public List<String> getNetworkedFields()
-    {
+    @Override
+    public void setFacing(short word0) {
+        facing = word0;
+        if (prevFacing != word0) {
+            NetworkManager.updateTileEntityField(this, "facing");
+        }
+        prevFacing = word0;
+    }
+
+    public List<String> getNetworkedFields() {
         Vector<String> vector = new Vector<>(2);
         vector.add("active");
         vector.add("facing");
@@ -103,10 +99,8 @@ public class WrenchableMachineTileEntity extends TileEntityBase
     }
 
     @Override
-    public void onNetworkUpdate(String s)
-    {
-        if(s.equals("active") && prevActive != active || s.equals("facing") && prevFacing != facing)
-        {
+    public void onNetworkUpdate(String s) {
+        if (s.equals("active") && prevActive != active || s.equals("facing") && prevFacing != facing) {
             level.method_243(x, y, z);
             prevActive = active;
             prevFacing = facing;
@@ -114,31 +108,17 @@ public class WrenchableMachineTileEntity extends TileEntityBase
     }
 
     @Override
-    public boolean wrenchSetFacing(PlayerBase entityplayer, int i)
-    {
+    public boolean wrenchSetFacing(PlayerBase entityplayer, int i) {
         return false;
     }
 
     @Override
-    public void setFacing(short word0)
-    {
-        facing = word0;
-        if(prevFacing != word0)
-        {
-            NetworkManager.updateTileEntityField(this, "facing");
-        }
-        prevFacing = word0;
-    }
-
-    @Override
-    public boolean wrenchRemove(PlayerBase entityplayer)
-    {
+    public boolean wrenchRemove(PlayerBase entityplayer) {
         return true;
     }
 
     @Override
-    public float getWrenchDropRate()
-    {
+    public float getWrenchDropRate() {
         return 1.0F;
     }
 }

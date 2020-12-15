@@ -14,7 +14,8 @@ public class MixinGameRenderer {
 
     private long clock = 0L;
 
-    @Shadow private Minecraft minecraft;
+    @Shadow
+    private Minecraft minecraft;
 
     @Inject(method = "method_1844", at = @At(value = "TAIL"))
     private void onTick(float delta, CallbackInfo ci) {

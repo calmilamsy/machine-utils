@@ -5,9 +5,8 @@
 package net.glasslauncher.mods.machineutils.common;
 
 
-public enum PositionSpec
-{
+public enum PositionSpec {
     Center,
     Backpack,
-    Hand;
+    Hand
 }

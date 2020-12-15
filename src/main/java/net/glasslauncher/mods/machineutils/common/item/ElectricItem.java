@@ -14,11 +14,13 @@ import net.minecraft.item.ItemInstance;
 //            ItemIC2, IChargeableItem, ItemElectricTool
 
 public abstract class ElectricItem extends ItemBase
-    implements IChargeableItem
-{
+        implements IChargeableItem {
 
-    public ElectricItem(int i, int j, int k, int l, int i1)
-    {
+    public int tier;
+    public int ratio;
+    public int transfer;
+
+    public ElectricItem(int i, int j, int k, int l, int i1) {
         super(i);
         setTexturePosition(j);
         tier = k;
@@ -27,42 +29,32 @@ public abstract class ElectricItem extends ItemBase
     }
 
     @Override
-    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag)
-    {
-        if(j < tier || itemstack.getDamage() == 1)
-        {
+    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag) {
+        if (j < tier || itemstack.getDamage() == 1) {
             return 0;
         }
         int k = (itemstack.getDamage() - 1) * ratio;
-        if(!flag && transfer != 0 && i > transfer)
-        {
+        if (!flag && transfer != 0 && i > transfer) {
             i = transfer;
         }
-        if(k < i)
-        {
+        if (k < i) {
             i = k;
         }
-        for(; i % ratio != 0; i--) { }
+        for (; i % ratio != 0; i--) {
+        }
         itemstack.setDamage(itemstack.getDamage() - i / ratio);
         return i;
     }
 
-    public boolean use(ItemInstance itemstack, int i, PlayerBase entityplayer)
-    {
+    public boolean use(ItemInstance itemstack, int i, PlayerBase entityplayer) {
         ItemElectricTool.chargeFromBatpack(itemstack, entityplayer);
-        if(itemstack.getDamage() + i > itemstack.method_723() - 1)
-        {
+        if (itemstack.getDamage() + i > itemstack.method_723() - 1) {
             return false;
         }
-        if(PlatformUtils.isSimulating())
-        {
+        if (PlatformUtils.isSimulating()) {
             itemstack.setDamage(itemstack.getDamage() + i);
             ItemElectricTool.chargeFromBatpack(itemstack, entityplayer);
         }
         return true;
     }
-
-    public int tier;
-    public int ratio;
-    public int transfer;
 }

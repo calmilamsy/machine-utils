@@ -12,8 +12,7 @@ package net.glasslauncher.mods.machineutils.api.energy;
 import net.glasslauncher.mods.machineutils.api.Direction;
 
 public interface IEnergySink
-    extends IEnergyAcceptor
-{
+        extends IEnergyAcceptor {
 
     boolean demandsEnergy();
 

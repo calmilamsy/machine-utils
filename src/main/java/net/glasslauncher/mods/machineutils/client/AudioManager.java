@@ -19,60 +19,61 @@ import java.lang.reflect.Field;
 import java.nio.IntBuffer;
 import java.util.*;
 
-import static net.glasslauncher.mods.machineutils.event.init.MachineUtils.*;
+import static net.glasslauncher.mods.machineutils.event.init.MachineUtils.config;
+import static net.glasslauncher.mods.machineutils.event.init.MachineUtils.generalConfig;
 
 // Referenced classes of package ic2.platform:
 //            AudioSource
 
-public final class AudioManager
-{
+public final class AudioManager {
 
-    public AudioManager()
-    {
+    public static float defaultVolume = 1.2F;
+    public static float fadingDistance = 16F;
+    private static boolean enabled = true;
+    private static int maxSourceCount = 32;
+    private static final int streamingSourceCount = 4;
+    private static final boolean lateInitDone = false;
+    private static SoundSystem soundSystem = null;
+    private static float masterVolume = 0.5F;
+    private static int ticker = 0;
+    private static int nextId = 0;
+    private static final Map objectToAudioSourceMap = new HashMap();
+
+    public AudioManager() {
     }
 
-    public static void initialize()
-    {
-        if(config != null)
-        {
+    public static void initialize() {
+        if (config != null) {
             enabled = generalConfig.getProperty("soundsEnabled", FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER && enabled).getBooleanValue();
             maxSourceCount = generalConfig.getProperty("soundSourceLimit", maxSourceCount).getIntValue();
             config.save();
-            if(maxSourceCount <= 6)
-            {
+            if (maxSourceCount <= 6) {
                 enabled = false;
             }
         }
-        if(!enabled)
-        {
+        if (!enabled) {
             return;
         }
         int i = 0;
         int j = maxSourceCount + 1;
-        try
-        {
+        try {
             AL.create();
+        } catch (Exception exception) {
         }
-        catch(Exception exception) { }
-        while(i < j - 1) 
-        {
+        while (i < j - 1) {
             int k = (i + j) / 2;
-            if(testSourceCount(k))
-            {
+            if (testSourceCount(k)) {
                 i = k;
-            } else
-            {
+            } else {
                 j = k;
             }
         }
         AL.destroy();
         maxSourceCount = i;
-        if(maxSourceCount < 6)
-        {
+        if (maxSourceCount < 6) {
             enabled = false;
             return;
-        } else
-        {
+        } else {
             System.out.println((new StringBuilder()).append("Using ").append(maxSourceCount).append(" audio sources.").toString());
             SoundSystemConfig.setNumberStreamingChannels(streamingSourceCount);
             SoundSystemConfig.setNumberNormalChannels(maxSourceCount - streamingSourceCount);
@@ -80,26 +81,20 @@ public final class AudioManager
         }
     }
 
-    public static void onTick()
-    {
-        if(!enabled || soundSystem == null)
-        {
+    public static void onTick() {
+        if (!enabled || soundSystem == null) {
             return;
         }
-        if(ticker++ % 8 == 0 && soundSystem != null)
-        {
+        if (ticker++ % 8 == 0 && soundSystem != null) {
             float f = ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.sound;
-            if(f != masterVolume)
-            {
+            if (f != masterVolume) {
                 float f1 = f / masterVolume;
                 masterVolume = f;
-                for(Iterator iterator = objectToAudioSourceMap.values().iterator(); iterator.hasNext();)
-                {
-                    List list = (List)iterator.next();
+                for (Iterator iterator = objectToAudioSourceMap.values().iterator(); iterator.hasNext(); ) {
+                    List list = (List) iterator.next();
                     Iterator iterator1 = list.iterator();
-                    while(iterator1.hasNext()) 
-                    {
-                        AudioSource audiosource = (AudioSource)iterator1.next();
+                    while (iterator1.hasNext()) {
+                        AudioSource audiosource = (AudioSource) iterator1.next();
                         audiosource.setVolume(audiosource.getVolume() * f1);
                     }
                 }
@@ -108,99 +103,79 @@ public final class AudioManager
         }
     }
 
-    public static AudioSource createSource(Object obj, String s)
-    {
+    public static AudioSource createSource(Object obj, String s) {
         return createSource(obj, PositionSpec.Center, s, false, false, defaultVolume);
     }
 
-    public static AudioSource createSource(Object obj, PositionSpec positionspec, String s, boolean flag, boolean flag1, float f)
-    {
-        if(!enabled)
-        {
+    public static AudioSource createSource(Object obj, PositionSpec positionspec, String s, boolean flag, boolean flag1, float f) {
+        if (!enabled) {
             return null;
         }
-        if(soundSystem == null)
-        {
+        if (soundSystem == null) {
             getSoundSystem();
         }
-        if(soundSystem == null)
-        {
+        if (soundSystem == null) {
             return null;
         }
         String s1 = getSourceName(nextId);
         nextId++;
         AudioSource audiosource = new AudioSource(soundSystem, s1, obj, positionspec, s, flag, flag1, f);
-        if(!objectToAudioSourceMap.containsKey(obj))
-        {
+        if (!objectToAudioSourceMap.containsKey(obj)) {
             objectToAudioSourceMap.put(obj, new LinkedList());
         }
-        ((List)objectToAudioSourceMap.get(obj)).add(audiosource);
+        ((List) objectToAudioSourceMap.get(obj)).add(audiosource);
         return audiosource;
     }
 
-    public static void removeSources(Object obj)
-    {
-        if(soundSystem == null)
-        {
+    public static void removeSources(Object obj) {
+        if (soundSystem == null) {
             return;
         }
-        if(!objectToAudioSourceMap.containsKey(obj))
-        {
+        if (!objectToAudioSourceMap.containsKey(obj)) {
             return;
         }
         AudioSource audiosource;
-        for(Iterator iterator = ((List)objectToAudioSourceMap.get(obj)).iterator(); iterator.hasNext(); audiosource.remove())
-        {
-            audiosource = (AudioSource)iterator.next();
+        for (Iterator iterator = ((List) objectToAudioSourceMap.get(obj)).iterator(); iterator.hasNext(); audiosource.remove()) {
+            audiosource = (AudioSource) iterator.next();
         }
 
         objectToAudioSourceMap.remove(obj);
     }
 
-    public static void playOnce(Object obj, String s)
-    {
+    public static void playOnce(Object obj, String s) {
         playOnce(obj, PositionSpec.Center, s, false, defaultVolume);
     }
 
-    public static void playOnce(Object obj, PositionSpec positionspec, String s, boolean flag, float f)
-    {
-        if(!enabled)
-        {
+    public static void playOnce(Object obj, PositionSpec positionspec, String s, boolean flag, float f) {
+        if (!enabled) {
             return;
         }
         AudioPosition audioposition = AudioPosition.getFrom(obj, positionspec);
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).level.playSound(audioposition.x, audioposition.y, audioposition.z, s, 1.0F, 1.0F);
     }
 
-    public static float getMasterVolume()
-    {
+    public static float getMasterVolume() {
         return masterVolume;
     }
 
-    private static boolean testSourceCount(int i)
-    {
+    private static boolean testSourceCount(int i) {
         IntBuffer intbuffer = BufferUtils.createIntBuffer(i);
-        try
-        {
+        try {
             AL10.alGenSources(intbuffer);
-            if(AL10.alGetError() == 0)
-            {
+            if (AL10.alGetError() == 0) {
                 AL10.alDeleteSources(intbuffer);
                 return true;
             }
-        }
-        catch(Exception exception)
-        {
+        } catch (Exception exception) {
             AL10.alGetError();
+        } catch (UnsatisfiedLinkError unsatisfiedlinkerror) {
         }
-        catch(UnsatisfiedLinkError unsatisfiedlinkerror) { }
         return false;
     }
 
-    private static void getSoundSystem()
-    {
+    private static void getSoundSystem() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            Field afield[] = (net.minecraft.client.sound.SoundHelper.class).getDeclaredFields();
+            Field[] afield = (net.minecraft.client.sound.SoundHelper.class).getDeclaredFields();
             int i = afield.length;
             int j = 0;
             do {
@@ -226,21 +201,8 @@ public final class AudioManager
         }
     }
 
-    private static String getSourceName(int i)
-    {
+    private static String getSourceName(int i) {
         return (new StringBuilder()).append("asm_snd").append(i).toString();
     }
-
-    public static float defaultVolume = 1.2F;
-    public static float fadingDistance = 16F;
-    private static boolean enabled = true;
-    private static int maxSourceCount = 32;
-    private static int streamingSourceCount = 4;
-    private static boolean lateInitDone = false;
-    private static SoundSystem soundSystem = null;
-    private static float masterVolume = 0.5F;
-    private static int ticker = 0;
-    private static int nextId = 0;
-    private static Map objectToAudioSourceMap = new HashMap();
 
 }

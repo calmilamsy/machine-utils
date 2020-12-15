@@ -3,6 +3,7 @@
 // Decompiler options: packimports(3) braces deadcode 
 
 package net.glasslauncher.mods.machineutils.common.item;
+
 import net.glasslauncher.mods.machineutils.api.energy.IChargeableItem;
 import net.glasslauncher.mods.machineutils.common.PlatformUtils;
 import net.minecraft.block.BlockBase;
@@ -17,11 +18,14 @@ import net.modificationstation.stationloader.api.common.item.StrengthOnMeta;
 //            IChargeableItem, ItemArmorBatpack
 
 class ItemElectricTool extends ToolBase
-    implements IChargeableItem, StrengthOnMeta
-{
+        implements IChargeableItem, StrengthOnMeta {
 
-    public ItemElectricTool(int i, int j, ToolMaterial enumtoolmaterial, BlockBase ablock[], int k, int l, int i1)
-    {
+    public int tier;
+    public int ratio;
+    public int transfer;
+    public BlockBase[] mineables;
+
+    public ItemElectricTool(int i, int j, ToolMaterial enumtoolmaterial, BlockBase[] ablock, int k, int l, int i1) {
         super(i, j, enumtoolmaterial, ablock);
         tier = k;
         ratio = l;
@@ -29,23 +33,39 @@ class ItemElectricTool extends ToolBase
         mineables = ablock;
     }
 
+    public static boolean use(ItemInstance itemstack, int i, PlayerBase entityplayer) {
+        chargeFromBatpack(itemstack, entityplayer);
+        if (itemstack.getDamage() + i > itemstack.method_723() - 1) {
+            return false;
+        }
+        if (PlatformUtils.isSimulating()) {
+            itemstack.setDamage(itemstack.getDamage() + i);
+            chargeFromBatpack(itemstack, entityplayer);
+        }
+        return true;
+    }
+
+    public static void chargeFromBatpack(ItemInstance itemstack, PlayerBase entityplayer) {
+        if (entityplayer == null || entityplayer.inventory.armour[2] == null || !(entityplayer.inventory.armour[2].getType() instanceof ItemArmorBatpack)) {
+            return;
+        } else {
+            ((ItemArmorBatpack) entityplayer.inventory.armour[2].getType()).useBatpackOn(itemstack, entityplayer.inventory.armour[2]);
+            return;
+        }
+    }
+
     @Override
-    public float getStrengthOnBlock(ItemInstance itemstack, BlockBase block, int i)
-    {
-        if(itemstack.getDamage() + 1 >= itemstack.method_723())
-        {
+    public float getStrengthOnBlock(ItemInstance itemstack, BlockBase block, int i) {
+        if (itemstack.getDamage() + 1 >= itemstack.method_723()) {
             return 1.0F;
         }
         return super.getStrengthOnBlock(itemstack, block);
     }
 
     @Override
-    public boolean isEffectiveOn(BlockBase block)
-    {
-        for(int i = 0; i < mineables.length; i++)
-        {
-            if(mineables[i] == block)
-            {
+    public boolean isEffectiveOn(BlockBase block) {
+        for (int i = 0; i < mineables.length; i++) {
+            if (mineables[i] == block) {
                 return true;
             }
         }
@@ -54,61 +74,29 @@ class ItemElectricTool extends ToolBase
     }
 
     @Override
-    public boolean postHit(ItemInstance itemstack, Living entityliving, Living entityliving1)
-    {
+    public boolean postHit(ItemInstance itemstack, Living entityliving, Living entityliving1) {
         return true;
     }
 
     @Override
-    public boolean postMine(ItemInstance itemstack, int i, int j, int k, int l, Living entityliving)
-    {
+    public boolean postMine(ItemInstance itemstack, int i, int j, int k, int l, Living entityliving) {
         return true;
-    }
-
-    public static boolean use(ItemInstance itemstack, int i, PlayerBase entityplayer)
-    {
-        chargeFromBatpack(itemstack, entityplayer);
-        if(itemstack.getDamage() + i > itemstack.method_723() - 1)
-        {
-            return false;
-        }
-        if(PlatformUtils.isSimulating())
-        {
-            itemstack.setDamage(itemstack.getDamage() + i);
-            chargeFromBatpack(itemstack, entityplayer);
-        }
-        return true;
-    }
-
-    public static void chargeFromBatpack(ItemInstance itemstack, PlayerBase entityplayer)
-    {
-        if(entityplayer == null || entityplayer.inventory.armour[2] == null || !(entityplayer.inventory.armour[2].getType() instanceof ItemArmorBatpack))
-        {
-            return;
-        } else
-        {
-            ((ItemArmorBatpack)entityplayer.inventory.armour[2].getType()).useBatpackOn(itemstack, entityplayer.inventory.armour[2]);
-            return;
-        }
     }
 
     @Override
-    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag)
-    {
-        if(j < tier || itemstack.getDamage() == 1)
-        {
+    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag) {
+        if (j < tier || itemstack.getDamage() == 1) {
             return 0;
         }
         int k = (itemstack.getDamage() - 1) * ratio;
-        if(!flag && transfer != 0 && i > transfer)
-        {
+        if (!flag && transfer != 0 && i > transfer) {
             i = transfer;
         }
-        if(k < i)
-        {
+        if (k < i) {
             i = k;
         }
-        for(; i % ratio != 0; i--) { }
+        for (; i % ratio != 0; i--) {
+        }
         itemstack.setDamage(itemstack.getDamage() - i / ratio);
         return i;
     }
@@ -118,13 +106,7 @@ class ItemElectricTool extends ToolBase
         return ratio;
     }
 
-    public String getTextureFile()
-    {
+    public String getTextureFile() {
         return "/net/glasslauncher/mods/ic2sl/sprites/item_0.png";
     }
-
-    public int tier;
-    public int ratio;
-    public int transfer;
-    public BlockBase mineables[];
 }

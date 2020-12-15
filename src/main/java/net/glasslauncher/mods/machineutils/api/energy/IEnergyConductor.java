@@ -9,8 +9,7 @@ package net.glasslauncher.mods.machineutils.api.energy;
 //            IEnergyAcceptor, IEnergyEmitter
 
 public interface IEnergyConductor
-    extends IEnergyAcceptor, IEnergyEmitter
-{
+        extends IEnergyAcceptor, IEnergyEmitter {
 
     double getConductionLoss();
 

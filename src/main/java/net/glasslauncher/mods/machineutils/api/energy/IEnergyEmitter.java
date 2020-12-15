@@ -11,8 +11,7 @@ import net.minecraft.tileentity.TileEntityBase;
 //            IEnergyTile, Direction
 
 public interface IEnergyEmitter
-    extends IEnergyTile
-{
+        extends IEnergyTile {
 
     boolean emitsEnergyTo(TileEntityBase tileentity, Direction direction);
 }

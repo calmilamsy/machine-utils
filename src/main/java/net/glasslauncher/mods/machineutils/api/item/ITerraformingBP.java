@@ -6,8 +6,7 @@ package net.glasslauncher.mods.machineutils.api.item;
 
 import net.minecraft.level.Level;
 
-public interface ITerraformingBP
-{
+public interface ITerraformingBP {
 
     int getConsume();
 

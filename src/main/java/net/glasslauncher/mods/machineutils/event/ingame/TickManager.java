@@ -18,11 +18,9 @@ public class TickManager {
         globalTicker = 0;
     }
 
-    public static void onTickInGame(List<PlayerBase> list)
-    {
+    public static void onTickInGame(List<PlayerBase> list) {
 
-        if(globalTicker % 128 == 0)
-        {
+        if (globalTicker % 128 == 0) {
             updateWind();
         }
         globalTicker++;
@@ -31,29 +29,23 @@ public class TickManager {
         NetworkManager.onTick();
     }
 
-    public static void updateWind()
-    {
+    public static void updateWind() {
         int i = 10;
         int j = 10;
-        if(windStrength > 20)
-        {
+        if (windStrength > 20) {
             i -= windStrength - 20;
         }
-        if(windStrength < 10)
-        {
+        if (windStrength < 10) {
             j -= 10 - windStrength;
         }
-        if(random.nextInt(100) <= i)
-        {
+        if (random.nextInt(100) <= i) {
             windStrength++;
             return;
         }
-        if(random.nextInt(100) <= j)
-        {
+        if (random.nextInt(100) <= j) {
             windStrength--;
             return;
-        } else
-        {
+        } else {
             return;
         }
     }

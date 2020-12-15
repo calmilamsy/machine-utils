@@ -6,9 +6,8 @@ package net.glasslauncher.mods.machineutils.api;
 
 import net.minecraft.tileentity.TileEntityBase;
 
-public enum Direction
-{
-	
+public enum Direction {
+
     XN(0),
     XP(1),
     YN(2),
@@ -16,36 +15,31 @@ public enum Direction
     ZN(4),
     ZP(5);
 
-    private Direction(int j)
-    {
+    private final int dir;
+
+    Direction(int j) {
         dir = j;
     }
 
-    public TileEntityBase applyToTileEntity(TileEntityBase tileentity)
-    {
-        int ai[] = {
-            tileentity.x, tileentity.y, tileentity.z
+    public TileEntityBase applyToTileEntity(TileEntityBase tileentity) {
+        int[] ai = {
+                tileentity.x, tileentity.y, tileentity.z
         };
         ai[dir / 2] += getSign();
-        if(tileentity.level != null && tileentity.level.isTileLoaded(ai[0], ai[1], ai[2]))
-        {
+        if (tileentity.level != null && tileentity.level.isTileLoaded(ai[0], ai[1], ai[2])) {
             return tileentity.level.getTileEntity(ai[0], ai[1], ai[2]);
-        } else
-        {
+        } else {
             return null;
         }
     }
 
-    public Direction getInverse()
-    {
+    public Direction getInverse() {
         int i = dir - getSign();
-        Direction adirection[] = values();
+        Direction[] adirection = values();
         int j = adirection.length;
-        for(int k = 0; k < j; k++)
-        {
+        for (int k = 0; k < j; k++) {
             Direction direction = adirection[k];
-            if(direction.dir == i)
-            {
+            if (direction.dir == i) {
                 return direction;
             }
         }
@@ -53,15 +47,11 @@ public enum Direction
         return this;
     }
 
-    public int toSideValue()
-    {
+    public int toSideValue() {
         return (dir + 4) % 6;
     }
 
-    private int getSign()
-    {
+    private int getSign() {
         return (dir % 2) * 2 - 1;
     }
-
-    private int dir;
 }

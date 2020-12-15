@@ -18,6 +18,7 @@ import net.minecraft.level.Level;
 import net.minecraft.level.TileView;
 import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,12 +26,35 @@ import java.util.Iterator;
 // Referenced classes of package ic2.common:
 //            TileEntityBlock, StackUtil
 
-public abstract class BlockMultiID extends BlockWithEntity
-{
+public abstract class BlockMultiID extends BlockWithEntity {
 
-    protected BlockMultiID(int i, Material material)
-    {
+    public static final int[][] sideAndFacingToSpriteOffset = {
+            {
+                    3, 5, 0, 0, 0, 0
+            }, {
+            5, 3, 1, 1, 1, 1
+    }, {
+            2, 2, 3, 2, 5, 4
+    }, {
+            1, 0, 4, 3, 2, 5
+    }, {
+            4, 4, 5, 4, 3, 2
+    }, {
+            0, 1, 2, 5, 4, 3
+    }
+    };
+
+    protected BlockMultiID(int i, Material material) {
         super(i, material);
+    }
+
+    public static boolean isActive(TileView iblockaccess, int i, int j, int k) {
+        TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
+        if (tileentity instanceof WrenchableMachineTileEntity) {
+            return ((WrenchableMachineTileEntity) tileentity).getActive();
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -49,63 +73,50 @@ public abstract class BlockMultiID extends BlockWithEntity
     }
 
     @Override
-    public int method_1626(TileView iblockaccess, int i, int j, int k, int l)
-    {
+    public int method_1626(TileView iblockaccess, int i, int j, int k, int l) {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
-        short word0 = (tileentity instanceof WrenchableMachineTileEntity) ? ((WrenchableMachineTileEntity)tileentity).getFacing() : 0;
+        short word0 = (tileentity instanceof WrenchableMachineTileEntity) ? ((WrenchableMachineTileEntity) tileentity).getFacing() : 0;
         int i1 = iblockaccess.getTileMeta(i, j, k);
-        if(isActive(iblockaccess, i, j, k))
-        {
+        if (isActive(iblockaccess, i, j, k)) {
             return (i1 + (sideAndFacingToSpriteOffset[l][word0] + 6) * 16);
-        } else
-        {
+        } else {
             return (i1 + sideAndFacingToSpriteOffset[l][word0] * 16);
         }
     }
 
     @Override
-    public int getTextureForSide(int i, int j)
-    {
+    public int getTextureForSide(int i, int j) {
         return j + sideAndFacingToSpriteOffset[i][3] * 16;
     }
 
     @Override
-    public boolean canUse(Level world, int i, int j, int k, PlayerBase entityplayer)
-    {
-        if(entityplayer.method_1373())
-        {
+    public boolean canUse(Level world, int i, int j, int k, PlayerBase entityplayer) {
+        if (entityplayer.method_1373()) {
             return false;
         }
-        Integer integer = getGui(world, i, j, k, entityplayer);
-        if(integer == null)
-        {
+        Identifier identifier = getGui(world, i, j, k, entityplayer);
+        if (identifier == null) {
             return false;
         }
-        if(!PlatformUtils.isSimulating())
-        {
+        if (!PlatformUtils.isSimulating()) {
             return true;
-        } else
-        {
-            return PlatformUtils.launchGUI(entityplayer, world.getTileEntity(i, j, k), integer);
+        } else {
+            return PlatformUtils.launchGUI(entityplayer, world.getTileEntity(i, j, k), identifier);
         }
     }
 
-    public abstract Integer getGui(Level world, int i, int j, int k, PlayerBase entityplayer);
+    public abstract Identifier getGui(Level world, int i, int j, int k, PlayerBase entityplayer);
 
-    public ArrayList getBlockDropped(Level world, int i, int j, int k, int l)
-    {
+    public ArrayList getBlockDropped(Level world, int i, int j, int k, int l) {
         ArrayList arraylist = new ArrayList();
         for (int bruh = 0; bruh < this.getDropCount(world.rand); bruh++)
-        	arraylist.add(new ItemInstance(this.getDropId(l, world.rand), 1, this.droppedMeta(l)));
+            arraylist.add(new ItemInstance(this.getDropId(l, world.rand), 1, this.droppedMeta(l)));
         TileEntityBase tileentity = world.getTileEntity(i, j, k);
-        if(tileentity instanceof InventoryBase)
-        {
-            InventoryBase iinventory = (InventoryBase)tileentity;
-            for(int i1 = 0; i1 < iinventory.getInventorySize(); i1++)
-            {
+        if (tileentity instanceof InventoryBase) {
+            InventoryBase iinventory = (InventoryBase) tileentity;
+            for (int i1 = 0; i1 < iinventory.getInventorySize(); i1++) {
                 ItemInstance itemstack = iinventory.getInventoryItem(i1);
-                if(itemstack != null)
-                {
+                if (itemstack != null) {
                     arraylist.add(itemstack);
                     iinventory.setInventoryItem(i1, null);
                 }
@@ -114,10 +125,9 @@ public abstract class BlockMultiID extends BlockWithEntity
         }
         return arraylist;
     }
-    
+
     @Override
-    public WrenchableMachineTileEntity createTileEntity()
-    {
+    public WrenchableMachineTileEntity createTileEntity() {
         return null;
     }
 
@@ -130,18 +140,14 @@ public abstract class BlockMultiID extends BlockWithEntity
     }
 
     @Override
-    public void onBlockRemoved(Level world, int i, int j, int k)
-    {
-        
+    public void onBlockRemoved(Level world, int i, int j, int k) {
+
         boolean flag = true;
-        for(Iterator iterator = getBlockDropped(world, i, j, k, world.getTileMeta(i, j, k)).iterator(); iterator.hasNext();)
-        {
-            ItemInstance itemstack = (ItemInstance)iterator.next();
-            if(flag)
-            {
+        for (Iterator iterator = getBlockDropped(world, i, j, k, world.getTileMeta(i, j, k)).iterator(); iterator.hasNext(); ) {
+            ItemInstance itemstack = (ItemInstance) iterator.next();
+            if (flag) {
                 flag = false;
-            } else
-            {
+            } else {
                 StackUtil.dropAsEntity(world, i, j, k, itemstack);
             }
         }
@@ -149,66 +155,33 @@ public abstract class BlockMultiID extends BlockWithEntity
     }
 
     @Override
-    public void afterPlaced(Level world, int i, int j, int k, Living entityliving)
-    {
-        if(!PlatformUtils.isSimulating())
-        {
+    public void afterPlaced(Level world, int i, int j, int k, Living entityliving) {
+        if (!PlatformUtils.isSimulating()) {
             return;
         }
-        WrenchableMachineTileEntity tileentityblock = (WrenchableMachineTileEntity)world.getTileEntity(i, j, k);
-        if(entityliving == null)
-        {
-            tileentityblock.setFacing((short)2);
-        } else
-        {
-            int l = MathHelper.floor((double)((entityliving.yaw * 4F) / 360F) + 0.5D) & 3;
-            switch(l)
-            {
-            case 0: // '\0'
-                tileentityblock.setFacing((short)2);
-                break;
+        WrenchableMachineTileEntity tileentityblock = (WrenchableMachineTileEntity) world.getTileEntity(i, j, k);
+        if (entityliving == null) {
+            tileentityblock.setFacing((short) 2);
+        } else {
+            int l = MathHelper.floor((double) ((entityliving.yaw * 4F) / 360F) + 0.5D) & 3;
+            switch (l) {
+                case 0: // '\0'
+                    tileentityblock.setFacing((short) 2);
+                    break;
 
-            case 1: // '\001'
-                tileentityblock.setFacing((short)5);
-                break;
+                case 1: // '\001'
+                    tileentityblock.setFacing((short) 5);
+                    break;
 
-            case 2: // '\002'
-                tileentityblock.setFacing((short)3);
-                break;
+                case 2: // '\002'
+                    tileentityblock.setFacing((short) 3);
+                    break;
 
-            case 3: // '\003'
-                tileentityblock.setFacing((short)4);
-                break;
+                case 3: // '\003'
+                    tileentityblock.setFacing((short) 4);
+                    break;
             }
         }
     }
-
-    public static boolean isActive(TileView iblockaccess, int i, int j, int k)
-    {
-        TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
-        if(tileentity instanceof WrenchableMachineTileEntity)
-        {
-            return ((WrenchableMachineTileEntity)tileentity).getActive();
-        } else
-        {
-            return false;
-        }
-    }
-
-    public static final int sideAndFacingToSpriteOffset[][] = {
-        {
-            3, 5, 0, 0, 0, 0
-        }, {
-            5, 3, 1, 1, 1, 1
-        }, {
-            2, 2, 3, 2, 5, 4
-        }, {
-            1, 0, 4, 3, 2, 5
-        }, {
-            4, 4, 5, 4, 3, 2
-        }, {
-            0, 1, 2, 5, 4, 3
-        }
-    };
 
 }

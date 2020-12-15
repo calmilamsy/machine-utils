@@ -14,10 +14,23 @@ import net.modificationstation.stationloader.api.client.item.ArmorTextureProvide
 //            ItemArmorBackpack, IChargeableItem
 
 public class ItemArmorBatpack extends Armour
-    implements IChargeableItem, ArmorTextureProvider
-{
+        implements IChargeableItem, ArmorTextureProvider {
 
+    public int tier;
+    public int sendTier;
+    public int ratio;
+    public int transfer;
     String texture;
+
+    public ItemArmorBatpack(int i, int j, String texture) {
+        super(i, j, 0, 1);
+        this.texture = texture;
+        tier = 1;
+        sendTier = 1;
+        ratio = 2;
+        transfer = 100;
+        setDurability(30002);
+    }
 
     @Override
     public String getChestplateModelTexture(ItemInstance itemInstance) {
@@ -29,30 +42,15 @@ public class ItemArmorBatpack extends Armour
         return "/assets/ic2/armor/" + texture + "_1.png";
     }
 
-    public ItemArmorBatpack(int i, int j, String texture)
-    {
-        super(i, j, 0, 1);
-        this.texture = texture;
-        tier = 1;
-        sendTier = 1;
-        ratio = 2;
-        transfer = 100;
-        setDurability(30002);
-    }
-
-    public void useBatpackOn(ItemInstance itemstack, ItemInstance itemstack1)
-    {
-        if(!(ItemBase.byId[itemstack.itemId] instanceof IChargeableItem))
-        {
+    public void useBatpackOn(ItemInstance itemstack, ItemInstance itemstack1) {
+        if (!(ItemBase.byId[itemstack.itemId] instanceof IChargeableItem)) {
             return;
         }
-        IChargeableItem ichargeableitem = (IChargeableItem)ItemBase.byId[itemstack.itemId];
+        IChargeableItem ichargeableitem = (IChargeableItem) ItemBase.byId[itemstack.itemId];
         int i = (itemstack1.method_723() - itemstack1.getDamage() - 1) * ratio;
-        if(i <= 0)
-        {
+        if (i <= 0) {
             return;
-        } else
-        {
+        } else {
             i -= ichargeableitem.giveEnergyTo(itemstack, i, sendTier, true);
             itemstack1.setDamage(itemstack1.method_723() - 1 - i / ratio);
             return;
@@ -60,22 +58,19 @@ public class ItemArmorBatpack extends Armour
     }
 
     @Override
-    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag)
-    {
-        if(j < tier || itemstack.getDamage() == 1)
-        {
+    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag) {
+        if (j < tier || itemstack.getDamage() == 1) {
             return 0;
         }
         int k = (itemstack.getDamage() - 1) * ratio;
-        if(!flag && transfer != 0 && i > transfer)
-        {
+        if (!flag && transfer != 0 && i > transfer) {
             i = transfer;
         }
-        if(k < i)
-        {
+        if (k < i) {
             i = k;
         }
-        for(; i % ratio != 0; i--) { }
+        for (; i % ratio != 0; i--) {
+        }
         itemstack.setDamage(itemstack.getDamage() - i / ratio);
         return i;
     }
@@ -84,9 +79,4 @@ public class ItemArmorBatpack extends Armour
     public int getRatio() {
         return ratio;
     }
-
-    public int tier;
-    public int sendTier;
-    public int ratio;
-    public int transfer;
 }

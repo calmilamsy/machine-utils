@@ -5,8 +5,7 @@
 package net.glasslauncher.mods.machineutils.api.network;
 
 
-public interface INetworkUpdateListener
-{
+public interface INetworkUpdateListener {
 
     void onNetworkUpdate(String s);
 }

@@ -9,8 +9,7 @@ package net.glasslauncher.mods.machineutils.api.energy;
 //            IEnergyEmitter
 
 public interface IEnergySource
-    extends IEnergyEmitter
-{
+        extends IEnergyEmitter {
 
     int getMaxEnergyOutput();
 }

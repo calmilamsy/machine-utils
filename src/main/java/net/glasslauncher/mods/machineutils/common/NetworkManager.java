@@ -15,25 +15,23 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
-import net.minecraft.packet.AbstractPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tileentity.TileEntityBase;
-import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
-import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
-import net.modificationstation.stationloader.api.common.packet.CustomData;
+import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
+import net.modificationstation.stationloader.api.common.packet.Message;
+import net.modificationstation.stationloader.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationloader.api.common.packet.PacketHelper;
-import uk.co.benjiweber.expressions.functions.QuadConsumer;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.BiConsumer;
 
 // Referenced classes of package ic2.platform:
 //            PlatformUtils
 
-public class NetworkManager implements PacketRegister
-{
+public class NetworkManager implements MessageListenerRegister {
     private static final int updatePeriod = 2;
     private static final Set<TileEntityField> fieldsToUpdateSet;
     private static int ticksLeftToUpdate;
@@ -43,8 +41,7 @@ public class NetworkManager implements PacketRegister
         NetworkManager.ticksLeftToUpdate = updatePeriod;
     }
 
-    public NetworkManager()
-    {
+    public NetworkManager() {
     }
 
     public static void onTick() {
@@ -56,14 +53,12 @@ public class NetworkManager implements PacketRegister
         }
     }
 
-    public static void updateTileEntityField(TileEntityBase tileentity, String s)
-    {
+    public static void updateTileEntityField(TileEntityBase tileentity, String s) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             if (tileentity instanceof INetworkUpdateListener) {
                 ((INetworkUpdateListener) tileentity).onNetworkUpdate(s);
             }
-        }
-        else {
+        } else {
             NetworkManager.fieldsToUpdateSet.add(new TileEntityField(tileentity, s));
             if (NetworkManager.fieldsToUpdateSet.size() > 10000) {
                 sendUpdatePacket();
@@ -71,145 +66,119 @@ public class NetworkManager implements PacketRegister
         }
     }
 
-    public static void initiateTileEntityEvent(TileEntityBase tileentity, int i, boolean flag)
-    {
+    public static void initiateTileEntityEvent(TileEntityBase tileentity, int i, boolean flag) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             if (tileentity instanceof INetworkTileEntityEventListener) {
                 ((INetworkTileEntityEventListener) tileentity).onNetworkEvent(i);
             }
-        }
-        else {
+        } else {
             final int j = flag ? 400 : ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles();
             final Level world = tileentity.level;
             for (final Object obj : world.players) {
                 final PlayerBase entityplayer = (PlayerBase) obj;
-                final int k = tileentity.x - (int)entityplayer.x;
-                final int l = tileentity.z - (int)entityplayer.z;
+                final int k = tileentity.x - (int) entityplayer.x;
+                final int l = tileentity.z - (int) entityplayer.z;
                 int i2;
                 if (flag) {
                     i2 = k * k + l * l;
-                }
-                else {
+                } else {
                     i2 = Math.max(Math.abs(k), Math.abs(l));
                 }
                 if (i2 <= j) {
-                    final CustomData packet230modloader = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:initiateTileEntityEvent");
-                    packet230modloader.getPacketInstance().field_906 = true;
-                    packet230modloader.set(new int[]{
-                            world.dimension.field_2179,
+                    final Message packet230modloader = new Message(Identifier.of("machineutils:initiateTileEntityEvent"));
+                    packet230modloader.field_906 = true;
+                    packet230modloader.put(world.dimension.field_2179,
                             tileentity.x,
                             tileentity.y,
                             tileentity.z,
-                            i
-                    });
-                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader.getPacketInstance());
+                            i);
+                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader);
                     System.out.println("Sent packet");
                 }
             }
         }
     }
 
-    public static void initiateItemEvent(PlayerBase entityplayer, ItemInstance itemstack, int i, boolean flag)
-    {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-        {
+    public static void initiateItemEvent(PlayerBase entityplayer, ItemInstance itemstack, int i, boolean flag) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ItemBase item = itemstack.getType();
             if (item instanceof INetworkItemEventListener) {
                 ((INetworkItemEventListener) item).onNetworkEvent(itemstack.getDamage(), entityplayer, i);
             }
-        }
-        else {
+        } else {
 
             final int j = flag ? 400 : ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles();
             for (final Object obj : entityplayer.level.players) {
-                final PlayerBase entityplayer2 = (PlayerBase)obj;
-                final int k = (int)entityplayer.x - (int)entityplayer2.x;
-                final int l = (int)entityplayer.z - (int)entityplayer2.z;
+                final PlayerBase entityplayer2 = (PlayerBase) obj;
+                final int k = (int) entityplayer.x - (int) entityplayer2.x;
+                final int l = (int) entityplayer.z - (int) entityplayer2.z;
                 int i2;
                 if (flag) {
                     i2 = k * k + l * l;
-                }
-                else {
+                } else {
                     i2 = Math.max(Math.abs(k), Math.abs(l));
                 }
                 if (i2 <= j) {
-                    final CustomData packet230modloader = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:initiateItemEvent");
-                    packet230modloader.getPacketInstance().field_906 = true;
-                    packet230modloader.set(new int[] {
-                            itemstack.itemId,
+                    final Message packet230modloader = new Message(Identifier.of("machineutils:initiateItemEvent"));
+                    packet230modloader.field_906 = true;
+                    packet230modloader.put(itemstack.itemId,
                             itemstack.getDamage(),
-                            i
-                    });
-                    packet230modloader.set(new String[] {entityplayer.name});
-                    PacketHelper.INSTANCE.sendTo(entityplayer2, packet230modloader.getPacketInstance());
+                            i);
+                    packet230modloader.put(entityplayer.name);
+                    PacketHelper.INSTANCE.sendTo(entityplayer2, packet230modloader);
                 }
             }
         }
     }
 
-    public static void announceBlockUpdate(Level world, int i, int j, int k)
-    {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-        {
+    public static void announceBlockUpdate(Level world, int i, int j, int k) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             world.method_243(i, j, k);
-        }
-        else {
+        } else {
             for (final Object obj : world.players) {
-                final PlayerBase entityplayer = (PlayerBase)obj;
-                final int l = Math.min(Math.abs(i - (int)entityplayer.x), Math.abs(k - (int)entityplayer.z));
+                final PlayerBase entityplayer = (PlayerBase) obj;
+                final int l = Math.min(Math.abs(i - (int) entityplayer.x), Math.abs(k - (int) entityplayer.z));
                 if (l <= ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles()) {
-                    final CustomData packet230modloader = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:announceBlockUpdate");
-                    packet230modloader.getPacketInstance().field_906 = true;
-                    packet230modloader.set(new int[] {
-                        world.dimension.field_2179,
-                        i,
-                        j,
-                        k
-                    });
-                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader.getPacketInstance());
+                    final Message packet230modloader = new Message(Identifier.of("machineutils:announceBlockUpdate"));
+                    packet230modloader.field_906 = true;
+                    packet230modloader.put(world.dimension.field_2179,
+                            i,
+                            j,
+                            k);
+                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader);
                 }
             }
         }
     }
 
-    public static void requestInitialTileEntityData(Level world, int i, int j, int k)
-    {
-        CustomData customPacket = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:requestInitialTileEntityData");
-        customPacket.getPacketInstance().field_906 = true;
-        customPacket.set(new int[] {
-            world.dimension.field_2179,
-            i,
-            j,
-            k
-        });
-        PacketHelper.INSTANCE.send(customPacket.getPacketInstance());
+    public static void requestInitialTileEntityData(Level world, int i, int j, int k) {
+        Message customPacket = new Message(Identifier.of("machineutils:requestInitialTileEntityData"));
+        customPacket.field_906 = true;
+        customPacket.put(world.dimension.field_2179,
+                i,
+                j,
+                k);
+        PacketHelper.INSTANCE.send(customPacket);
     }
 
-    public static void initiateClientItemEvent(ItemInstance itemstack, int i)
-    {
+    public static void initiateClientItemEvent(ItemInstance itemstack, int i) {
         ItemBase item = itemstack.getType();
-        if(PlatformUtils.isSimulating())
-        {
-            if(item instanceof INetworkItemEventListener)
-            {
-                ((INetworkItemEventListener)item).onNetworkEvent(itemstack.getDamage(), PlatformUtils.getPlayerInstance(), i);
+        if (PlatformUtils.isSimulating()) {
+            if (item instanceof INetworkItemEventListener) {
+                ((INetworkItemEventListener) item).onNetworkEvent(itemstack.getDamage(), PlatformUtils.getPlayerInstance(), i);
             }
-        } else
-        {
-            CustomData customPacket = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:initiateClientItemEvent");
-            customPacket.getPacketInstance().field_906 = true;
-            customPacket.set(new int[] {
-                itemstack.itemId,
-                itemstack.getDamage(),
-                i
-            });
-            PacketHelper.INSTANCE.send(customPacket.getPacketInstance());
+        } else {
+            Message customPacket = new Message(Identifier.of("machineutils:initiateClientItemEvent"));
+            customPacket.field_906 = true;
+            customPacket.put(itemstack.itemId,
+                    itemstack.getDamage(),
+                    i);
+            PacketHelper.INSTANCE.send(customPacket);
         }
     }
 
-    public static void handlePacket(PlayerBase player, CustomData customPacket, int packetType)
-    {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
+    public static void handlePacket(PlayerBase player, Message customPacket, int packetType) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             label0:
             {
                 if (packetType == 0 && customPacket.ints().length > 0) {
@@ -226,7 +195,7 @@ public class NetworkManager implements PacketRegister
                         Field field = null;
                         try {
                             if (tileentity1 != null) {
-                                Class class1 = tileentity1.getClass();
+                                Class<?> class1 = tileentity1.getClass();
                                 do {
                                     try {
                                         field = class1.getDeclaredField(s);
@@ -283,7 +252,7 @@ public class NetworkManager implements PacketRegister
                                     break;
 
                                 default:
-                                    throw new RuntimeException((new StringBuilder()).append("Invalid field type index: ").append(customPacket.ints()[k + 3]).toString());
+                                    throw new RuntimeException("Invalid field type index: " + customPacket.ints()[k + 3]);
                             }
                         } catch (Exception exception) {
                             throw new RuntimeException(exception);
@@ -329,8 +298,8 @@ public class NetworkManager implements PacketRegister
                     world3.method_243(customPacket.ints()[1], customPacket.ints()[2], customPacket.ints()[3]);
                 }
             }
-        }
-        else {
+        } else {
+            System.out.println(customPacket.ints().length);
             if (packetType == 0 && customPacket.ints().length == 4) {
                 final List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
                 final ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
@@ -342,31 +311,31 @@ public class NetworkManager implements PacketRegister
                     if (customPacket.ints()[0] == (ServerLevel).dimension.field_2179) {
                         final TileEntityBase tileentity = ServerLevel.getTileEntity(customPacket.ints()[1], customPacket.ints()[2], customPacket.ints()[3]);
                         if (tileentity instanceof WrenchableMachineTileEntity) {
-                            for (String s : ((WrenchableMachineTileEntity)tileentity).getNetworkedFields()) {
+                            for (String s : ((WrenchableMachineTileEntity) tileentity).getNetworkedFields()) {
                                 NetworkManager.fieldsToUpdateSet.add(new TileEntityField(tileentity, s, player));
                                 if (NetworkManager.fieldsToUpdateSet.size() > 10000) {
                                     sendUpdatePacket();
                                 }
                             }
+                            sendUpdatePacket();
                             break;
                         }
                         break;
-                    }
-                    else {
+                    } else {
                         ++j;
                     }
                 }
-            }
-            else if (packetType == 1 && customPacket.ints().length == 3) {
+            } else if (packetType == 1 && customPacket.ints().length == 3) {
                 final ItemBase item = ItemBase.byId[customPacket.ints()[0]];
                 if (item instanceof INetworkItemEventListener) {
-                    ((INetworkItemEventListener)item).onNetworkEvent(customPacket.ints()[1], player, customPacket.ints()[2]);
+                    ((INetworkItemEventListener) item).onNetworkEvent(customPacket.ints()[1], player, customPacket.ints()[2]);
                 }
             }
         }
     }
 
     private static void sendUpdatePacket() {
+        System.out.println("Update packet sent");
         List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
         ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
         ServerLevel[] aServerLevel = worldList.toArray(aServerLevelHelper);
@@ -378,8 +347,8 @@ public class NetworkManager implements PacketRegister
 
             while (iterator.hasNext()) {
                 PlayerBase obj = iterator.next();
-                CustomData packet230modloader = GeneralFactory.INSTANCE.newInst(CustomData.class, "machineutils:updatePacket");
-                packet230modloader.getPacketInstance().field_906 = true;
+                Message packet230modloader = new Message(Identifier.of("machineutils:updatePacket"));
+                packet230modloader.field_906 = true;
                 Vector<Float> vector = new Vector<>();
                 Vector<Integer> vector1 = new Vector<>();
                 Vector<String> vector2 = new Vector<>();
@@ -418,7 +387,7 @@ public class NetworkManager implements PacketRegister
                                     vector1.add(field.getInt(tileentityfield.te));
                                 } else if (class2 == String.class) {
                                     vector1.add(2);
-                                    vector2.add((String)field.get(tileentityfield.te));
+                                    vector2.add((String) field.get(tileentityfield.te));
                                 } else if (class2 == Boolean.TYPE) {
                                     vector1.add(3);
                                     vector1.add(field.getBoolean(tileentityfield.te) ? 1 : 0);
@@ -452,10 +421,10 @@ public class NetworkManager implements PacketRegister
                         af[(k++)] = float1;
                     }
 
-                    packet230modloader.set(ai);
-                    packet230modloader.set(af);
-                    packet230modloader.set(vector2.toArray(new String[0]));
-                    PacketHelper.INSTANCE.sendTo(obj, packet230modloader.getPacketInstance());
+                    packet230modloader.put(ai);
+                    packet230modloader.put(af);
+                    packet230modloader.put(vector2.toArray(new String[0]));
+                    PacketHelper.INSTANCE.sendTo(obj, packet230modloader);
                 }
             }
         }
@@ -463,36 +432,33 @@ public class NetworkManager implements PacketRegister
     }
 
     @Override
-    public void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> quadConsumer, Map<String, BiConsumer<PlayerBase, CustomData>> map) {
+    public void registerMessageListeners(MessageListenerRegistry messageListeners, ModID modID) {
         // Client to server
-        map.put("requestInitialTileEntityData", ((playerBase, customData) -> {handlePacket(playerBase, customData, 0);}));
-        map.put("initiateClientItemEvent", ((playerBase, customData) -> {handlePacket(playerBase, customData, 1);}));
+        messageListeners.registerValue(Identifier.of(modID, "requestInitialTileEntityData"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 0);
+        }));
+        messageListeners.registerValue(Identifier.of(modID, "initiateClientItemEvent"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 1);
+        }));
         // Server to client
-        map.put("updatePacket", ((playerBase, customData) -> {handlePacket(playerBase, customData, 0);}));
-        map.put("initiateTileEntityEvent", ((playerBase, customData) -> {handlePacket(playerBase, customData, 1);}));
-        map.put("initiateItemEvent", ((playerBase, customData) -> {handlePacket(playerBase, customData, 2);}));
-        map.put("announceBlockUpdate", ((playerBase, customData) -> {handlePacket(playerBase, customData, 3);}));
+        messageListeners.registerValue(Identifier.of(modID, "updatePacket"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 0);
+        }));
+        messageListeners.registerValue(Identifier.of(modID, "initiateTileEntityEvent"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 1);
+        }));
+        messageListeners.registerValue(Identifier.of(modID, "initiateItemEvent"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 2);
+        }));
+        messageListeners.registerValue(Identifier.of(modID, "announceBlockUpdate"), ((playerBase, customData) -> {
+            handlePacket(playerBase, customData, 3);
+        }));
     }
 
-    static class TileEntityField
-    {
+    static class TileEntityField {
         TileEntityBase te;
         String field;
         PlayerBase target;
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (obj instanceof TileEntityField) {
-                final TileEntityField tileentityfield = (TileEntityField)obj;
-                return tileentityfield.te == this.te && tileentityfield.field.equals(this.field);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return this.te.hashCode() * 31 ^ this.field.hashCode();
-        }
 
         TileEntityField(final TileEntityBase tileentity, final String s) {
             this.target = null;
@@ -505,6 +471,20 @@ public class NetworkManager implements PacketRegister
             this.te = tileentity;
             this.field = s;
             this.target = entityplayer;
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj instanceof TileEntityField) {
+                final TileEntityField tileentityfield = (TileEntityField) obj;
+                return tileentityfield.te == this.te && tileentityfield.field.equals(this.field);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.te.hashCode() * 31 ^ this.field.hashCode();
         }
     }
 }
