@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolBase;
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationloader.api.common.item.StrengthOnMeta;
+import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
 
 // Referenced classes of package ic2.common:
 //            IChargeableItem, ItemArmorBatpack

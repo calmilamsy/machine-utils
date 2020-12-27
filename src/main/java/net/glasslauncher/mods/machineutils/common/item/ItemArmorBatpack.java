@@ -8,7 +8,7 @@ import net.glasslauncher.mods.machineutils.api.energy.IChargeableItem;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.armour.Armour;
-import net.modificationstation.stationloader.api.client.item.ArmorTextureProvider;
+import net.modificationstation.stationapi.api.client.item.ArmorTextureProvider;
 
 // Referenced classes of package ic2.common:
 //            ItemArmorBackpack, IChargeableItem

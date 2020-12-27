@@ -18,12 +18,12 @@ import net.minecraft.level.Level;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tileentity.TileEntityBase;
-import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationloader.api.common.packet.Message;
-import net.modificationstation.stationloader.api.common.packet.MessageListenerRegistry;
-import net.modificationstation.stationloader.api.common.packet.PacketHelper;
-import net.modificationstation.stationloader.api.common.registry.Identifier;
-import net.modificationstation.stationloader.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
+import net.modificationstation.stationapi.api.common.packet.Message;
+import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.common.packet.PacketHelper;
+import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 
 import java.lang.reflect.Field;
 import java.util.*;

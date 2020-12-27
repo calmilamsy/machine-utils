@@ -18,7 +18,7 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationloader:mod": [
+    "stationapi:mod": [
       "net.glasslauncher.mods.machineutils.event.init.MachineUtils"
     ]
   },

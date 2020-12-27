@@ -1,10 +1,10 @@
 package net.glasslauncher.mods.machineutils.event.init;
 
 import net.glasslauncher.mods.machineutils.common.NetworkManager;
-import net.modificationstation.stationloader.api.common.config.Category;
-import net.modificationstation.stationloader.api.common.config.Configuration;
-import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationapi.api.common.config.Category;
+import net.modificationstation.stationapi.api.common.config.Configuration;
+import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
+import net.modificationstation.stationapi.api.common.mod.StationMod;
 
 public class MachineUtils implements StationMod {
     public static Configuration config;

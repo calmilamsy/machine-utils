@@ -5,8 +5,8 @@
 package net.glasslauncher.mods.machineutils.api.energy;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.client.gui.Colors;
-import net.modificationstation.stationloader.api.client.gui.HasCustomTooltip;
+import net.modificationstation.stationapi.api.client.gui.Colors;
+import net.modificationstation.stationapi.api.client.gui.HasCustomTooltip;
 
 import java.util.ArrayList;
 import java.util.List;
