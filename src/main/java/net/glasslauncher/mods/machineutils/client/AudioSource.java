@@ -1,21 +1,16 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.client;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.machineutils.common.AudioPosition;
 import net.glasslauncher.mods.machineutils.common.PositionSpec;
 import net.glasslauncher.mods.machineutils.mixin.client.SoundHelperAccessor;
-import net.minecraft.class_267;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.sound.SoundEntry;
 import paulscode.sound.SoundSystem;
 
 import java.net.URL;
 
-// Referenced classes of package ic2.platform:
-//            AudioManager
+
 
 public final class AudioSource {
 
@@ -34,9 +29,9 @@ public final class AudioSource {
         sourceName = s;
         obj = obj1;
         positionSpec = positionspec;
-        class_267 soundEntry = ((SoundHelperAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).soundHelper).getSoundMapSounds().method_958(s1);
-        URL url = soundEntry.field_2127;
-        s1 = soundEntry.field_2126;
+        SoundEntry soundEntry = ((SoundHelperAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).soundHelper).getSounds().getRandomSoundForId(s1);
+        URL url = soundEntry.soundUrl;
+        s1 = soundEntry.soundName;
         //URL url = (AudioSource.class).getClassLoader().getResource((new StringBuilder()).append("/assets/ic2/stationloader/sounds/sound/").append(s1).toString());
         if (url == null) {
             System.out.println((new StringBuilder()).append("Invalid sound file: ").append(s1).toString());

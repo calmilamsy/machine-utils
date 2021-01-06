@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common;
 
 import net.fabricmc.api.EnvType;
@@ -9,6 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.machineutils.api.network.INetworkItemEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkTileEntityEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkUpdateListener;
+import net.glasslauncher.mods.machineutils.common.NetworkManager.TileEntityField;
 import net.glasslauncher.mods.machineutils.common.tileentity.WrenchableMachineTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
@@ -29,8 +26,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-// Referenced classes of package ic2.platform:
-//            PlatformUtils
+
 
 public class NetworkManager implements MessageListenerRegister
 {

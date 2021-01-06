@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common;
 
 import net.glasslauncher.mods.machineutils.api.Direction;
@@ -81,7 +77,7 @@ public class StackUtil {
         itemstack.count = 0;
         for (int j = 0; j < iinventory.getInventorySize(); j++) {
             ItemInstance itemstack1 = iinventory.getInventoryItem(j);
-            if (itemstack1 == null || !itemstack1.isEqualIgnoreFlags(itemstack)) {
+            if (itemstack1 == null || !itemstack1.isDamageAndIDIdentical(itemstack)) {
                 continue;
             }
             int k = Math.min(i, itemstack1.count);
@@ -101,10 +97,10 @@ public class StackUtil {
     public static void putInInventory(InventoryBase iinventory, ItemInstance itemstack) {
         for (int i = 0; i < iinventory.getInventorySize(); i++) {
             ItemInstance itemstack1 = iinventory.getInventoryItem(i);
-            if (itemstack1 == null || !itemstack1.isEqualIgnoreFlags(itemstack)) {
+            if (itemstack1 == null || !itemstack1.isDamageAndIDIdentical(itemstack)) {
                 continue;
             }
-            int k = Math.min(itemstack.count, itemstack1.method_709() - itemstack1.count);
+            int k = Math.min(itemstack.count, itemstack1.getMaxStackSize() - itemstack1.count);
             itemstack1.count += k;
             itemstack.count -= k;
             if (itemstack.count == 0) {
@@ -117,7 +113,7 @@ public class StackUtil {
             if (itemstack2 != null) {
                 continue;
             }
-            int l = Math.min(itemstack.count, itemstack.method_709());
+            int l = Math.min(itemstack.count, itemstack.getMaxStackSize());
             iinventory.setInventoryItem(j, new ItemInstance(itemstack.itemId, l, itemstack.getDamage()));
             itemstack.count -= l;
             if (itemstack.count == 0) {

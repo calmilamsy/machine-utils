@@ -1,14 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common;
 
 import net.minecraft.entity.EntityBase;
 import net.minecraft.tileentity.TileEntityBase;
 
-// Referenced classes of package ic2.common:
-//            PositionSpec
+
 
 public class AudioPosition {
 

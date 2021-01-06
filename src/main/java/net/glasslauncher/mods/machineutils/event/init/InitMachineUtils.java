@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.common.config.Configuration;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationapi.api.common.mod.StationMod;
 
-public class MachineUtils implements StationMod {
+public class InitMachineUtils implements StationMod {
     public static Configuration config;
     public static Category generalConfig;
 

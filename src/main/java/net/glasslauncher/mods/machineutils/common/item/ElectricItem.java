@@ -1,17 +1,13 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common.item;
 
 import net.glasslauncher.mods.machineutils.api.energy.IChargeableItem;
+import net.glasslauncher.mods.machineutils.common.MachineUtils;
 import net.glasslauncher.mods.machineutils.common.PlatformUtils;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 
-// Referenced classes of package ic2.common:
-//            ItemIC2, IChargeableItem, ItemElectricTool
+
 
 public abstract class ElectricItem extends ItemBase
         implements IChargeableItem {
@@ -47,14 +43,24 @@ public abstract class ElectricItem extends ItemBase
     }
 
     public boolean use(ItemInstance itemstack, int i, PlayerBase entityplayer) {
-        ItemElectricTool.chargeFromBatpack(itemstack, entityplayer);
-        if (itemstack.getDamage() + i > itemstack.method_723() - 1) {
+        MachineUtils.chargeFromBatPack(itemstack, entityplayer);
+        if (itemstack.getDamage() + i > itemstack.getDurability() - 1) {
             return false;
         }
         if (PlatformUtils.isSimulating()) {
             itemstack.setDamage(itemstack.getDamage() + i);
-            ItemElectricTool.chargeFromBatpack(itemstack, entityplayer);
+            MachineUtils.chargeFromBatPack(itemstack, entityplayer);
         }
         return true;
+    }
+
+    @Override
+    public int getMaxEnergy(ItemInstance itemInstance) {
+        return ratio * 10000;
+    }
+
+    @Override
+    public int getTier(ItemInstance itemInstance) {
+        return tier;
     }
 }

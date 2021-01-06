@@ -4,7 +4,13 @@
   "package": "net.glasslauncher.mods.machineutils.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "common.MaterialAccessor"
+    "client.ItemRendererAccessor",
+    "common.BlockBaseAccessor",
+    "common.EntityBaseAccessor",
+    "common.FireAccessor",
+    "common.LivingAccessor",
+    "common.MaterialAccessor",
+    "common.ToolAccessor"
   ],
   "server": [
     "server.MixinMinecraftServer"

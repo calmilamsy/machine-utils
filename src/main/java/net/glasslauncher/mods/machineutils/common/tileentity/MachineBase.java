@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common.tileentity;
 
 import net.minecraft.entity.player.PlayerBase;
@@ -10,8 +6,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 
-// Referenced classes of package ic2.common:
-//            TileEntityBlock
+
 
 /**
  * Extend this when making custom machines.

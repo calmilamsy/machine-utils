@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common.block;
 
 import net.glasslauncher.mods.machineutils.common.PlatformUtils;
@@ -23,8 +19,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-// Referenced classes of package ic2.common:
-//            TileEntityBlock, StackUtil
+
 
 public abstract class BlockMultiID extends BlockWithEntity {
 
@@ -73,7 +68,7 @@ public abstract class BlockMultiID extends BlockWithEntity {
     }
 
     @Override
-    public int method_1626(TileView iblockaccess, int i, int j, int k, int l) {
+    public int getTextureForSide(TileView iblockaccess, int i, int j, int k, int l) {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
         short word0 = (tileentity instanceof WrenchableMachineTileEntity) ? ((WrenchableMachineTileEntity) tileentity).getFacing() : 0;
         int i1 = iblockaccess.getTileMeta(i, j, k);

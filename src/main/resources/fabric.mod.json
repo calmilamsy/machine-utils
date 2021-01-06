@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:mod": [
-      "net.glasslauncher.mods.machineutils.event.init.MachineUtils"
+      "net.glasslauncher.mods.machineutils.event.init.InitMachineUtils"
     ]
   },
   "mixins": [

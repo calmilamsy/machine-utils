@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.client;
 
 import net.fabricmc.api.EnvType;
@@ -19,11 +15,10 @@ import java.lang.reflect.Field;
 import java.nio.IntBuffer;
 import java.util.*;
 
-import static net.glasslauncher.mods.machineutils.event.init.MachineUtils.config;
-import static net.glasslauncher.mods.machineutils.event.init.MachineUtils.generalConfig;
+import static net.glasslauncher.mods.machineutils.event.init.InitMachineUtils.config;
+import static net.glasslauncher.mods.machineutils.event.init.InitMachineUtils.generalConfig;
 
-// Referenced classes of package ic2.platform:
-//            AudioSource
+
 
 public final class AudioManager {
 

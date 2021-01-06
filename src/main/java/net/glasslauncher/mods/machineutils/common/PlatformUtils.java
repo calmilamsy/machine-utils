@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.mods.machineutils.common;
 
 import net.fabricmc.api.EnvType;
@@ -29,8 +25,7 @@ import org.lwjgl.input.Keyboard;
 import java.io.File;
 import java.util.List;
 
-// Referenced classes of package ic2.platform:
-//            Ic2
+
 
 /**
  * A side-independent utility class which unifies some client/server only methods so you dont have to.
