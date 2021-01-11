@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.common.item.HasItemEntity;
 import net.modificationstation.stationapi.api.common.item.ItemEntity;
 import net.modificationstation.stationapi.api.common.item.ItemWithEntity;
-import net.modificationstation.stationapi.api.common.preset.item.ItemBase;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -49,9 +48,7 @@ public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, Custo
     }
 
     default void setEnergy(ItemInstance itemInstance, int newEnergy) {
-        System.out.println("adding " + newEnergy);
         ((ItemWithEnergy) HasItemEntity.cast(itemInstance).getItemEntity()).energy = Math.min(newEnergy, getMaxEnergy(itemInstance));
-        System.out.println(((ItemWithEnergy) HasItemEntity.cast(itemInstance).getItemEntity()).energy);
         if (getEnergy(itemInstance) < 0) {
             setEnergy(itemInstance, 0);
         }
@@ -84,19 +81,18 @@ public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, Custo
 
     @Override
     default void renderItemOverlay(ItemRenderer itemRenderer, int itemX, int itemY, ItemInstance itemInstance, TextRenderer textRenderer, TextureManager textureManager) {
-        int var11 = (int)Math.round(13.0D - (double)getMaxEnergy(itemInstance) * 13.0D / (double)getEnergy(itemInstance));
-        System.out.println(var11 + " ===");
-        int var7 = (int)Math.round(255.0D - (double)getMaxEnergy(itemInstance) * 255.0D / (double)getEnergy(itemInstance));
-        System.out.println(var7);
+        int barLength = (int)Math.round((((double)getEnergy(itemInstance) / (double)getMaxEnergy(itemInstance)) * 13));
+        int colourOffset = 255-(int)Math.round((((double)getEnergy(itemInstance) / (double)getMaxEnergy(itemInstance)) * 225));
         GL11.glDisable(2896);
         GL11.glDisable(2929);
         GL11.glDisable(3553);
         Tessellator var8 = Tessellator.INSTANCE;
-        int var9 = 255 - var7 << 16 | var7 << 8;
-        int var10 = (255 - var7) / 4 << 16 | 16128;
-        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 11, 13, 2, 0);
-        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 11, 12, 1, var10);
-        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 11, var11, 1, var9);
+        int barColour = Math.max((colourOffset/8) - 130, 100) << 16 | (233-colourOffset) << 8 | 255-(colourOffset/4);
+        int backgroundColour = (255 - colourOffset) / 4 << 16 | 16128;
+        int barOffset = itemInstance.isDamaged()? 2 : 0;
+        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 13 - barOffset, 13, 2, 0);
+        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 13 - barOffset, 12, 1, backgroundColour);
+        ((ItemRendererAccessor) itemRenderer).invokeMethod_1485(var8, itemX + 2, itemY + 13 - barOffset, barLength, 1, barColour);
         GL11.glEnable(3553);
         GL11.glEnable(2896);
         GL11.glEnable(2929);
