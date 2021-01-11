@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.machineutils.api.network.INetworkItemEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkTileEntityEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkUpdateListener;
-import net.glasslauncher.mods.machineutils.common.NetworkManager.TileEntityField;
 import net.glasslauncher.mods.machineutils.common.tileentity.WrenchableMachineTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
@@ -24,7 +23,6 @@ import net.modificationstation.stationapi.api.common.registry.ModID;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.BiConsumer;
 
 
 
