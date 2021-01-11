@@ -164,7 +164,7 @@ public class NetworkManager implements MessageListenerRegister
 
     public static void requestInitialTileEntityData(Level world, int i, int j, int k)
     {
-        Message customPacket = new Message(Identifier.of( "machineutils:requestInitialTileEntityData"));
+        Message customPacket = new Message(Identifier.of("machineutils:requestInitialTileEntityData"));
         customPacket.field_906 = true;
         customPacket.put(new int[] {world.dimension.field_2179,
                 i,
@@ -294,7 +294,7 @@ public class NetworkManager implements MessageListenerRegister
                 }
                 if (packetType == 2 && customPacket.ints().length == 3) {
                     Level world2 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    Iterator iterator = world2.players.iterator();
+                    Iterator<?> iterator = world2.players.iterator();
                     PlayerBase entityplayer;
                     do {
                         if (!iterator.hasNext()) {
@@ -317,7 +317,6 @@ public class NetworkManager implements MessageListenerRegister
             }
         }
         else {
-            System.out.println(customPacket.ints().length);
             if (packetType == 0 && customPacket.ints().length == 4) {
                 final List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
                 final ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
@@ -361,22 +360,18 @@ public class NetworkManager implements MessageListenerRegister
         ServerLevel[] aServerLevel = worldList.toArray(aServerLevelHelper);
         int i = aServerLevel.length;
 
-        for (int j = 0; j < i; j++) {
-            ServerLevel ServerLevel = aServerLevel[j];
-            Iterator<PlayerBase> iterator = ServerLevel.players.iterator();
+        for (net.minecraft.server.level.ServerLevel ServerLevel : aServerLevel) {
 
-            while (iterator.hasNext()) {
-                PlayerBase obj = iterator.next();
-                Message packet230modloader = new Message(Identifier.of( "machineutils:updatePacket"));
+            //noinspection unchecked
+            for (PlayerBase obj : (Iterable<PlayerBase>) ServerLevel.players) {
+                Message packet230modloader = new Message(Identifier.of("machineutils:updatePacket"));
                 packet230modloader.field_906 = true;
                 Vector<Float> vector = new Vector<>();
                 Vector<Integer> vector1 = new Vector<>();
                 Vector<String> vector2 = new Vector<>();
                 vector1.add(ServerLevel.dimension.field_2179);
-                Iterator<TileEntityField> iterator1 = fieldsToUpdateSet.iterator();
 
-                while (iterator1.hasNext()) {
-                    TileEntityField tileentityfield = iterator1.next();
+                for (TileEntityField tileentityfield : fieldsToUpdateSet) {
                     if ((!tileentityfield.te.isInvalid()) && (tileentityfield.te.level == ServerLevel) && ((tileentityfield.target == null) || (tileentityfield.target == obj))) {
                         int l = Math.min(Math.abs(tileentityfield.te.x - (int) obj.x), Math.abs(tileentityfield.te.z - (int) obj.z));
                         if (l <= ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles()) {
@@ -391,6 +386,7 @@ public class NetworkManager implements MessageListenerRegister
                                     try {
                                         field = class1.getDeclaredField(tileentityfield.field);
                                     } catch (NoSuchFieldException nosuchfieldexception) {
+                                        //noinspection unchecked
                                         class1 = (Class<? extends TileEntityBase>) class1.getSuperclass();
                                     }
                                 } while ((field == null) && (class1 != null));
@@ -407,7 +403,7 @@ public class NetworkManager implements MessageListenerRegister
                                     vector1.add(field.getInt(tileentityfield.te));
                                 } else if (class2 == String.class) {
                                     vector1.add(2);
-                                    vector2.add((String)field.get(tileentityfield.te));
+                                    vector2.add((String) field.get(tileentityfield.te));
                                 } else if (class2 == Boolean.TYPE) {
                                     vector1.add(3);
                                     vector1.add(field.getBoolean(tileentityfield.te) ? 1 : 0);
@@ -429,15 +425,13 @@ public class NetworkManager implements MessageListenerRegister
                 if (vector1.size() > 1) {
                     int[] ai = new int[vector1.size()];
                     int k = 0;
-                    for (Iterator<Integer> iterator2 = vector1.iterator(); iterator2.hasNext(); ) {
-                        Integer integer = iterator2.next();
+                    for (Integer integer : vector1) {
                         ai[(k++)] = integer;
                     }
 
                     float[] af = new float[vector.size()];
                     k = 0;
-                    for (Iterator<Float> iterator3 = vector.iterator(); iterator3.hasNext(); ) {
-                        Float float1 = iterator3.next();
+                    for (Float float1 : vector) {
                         af[(k++)] = float1;
                     }
 
@@ -454,13 +448,13 @@ public class NetworkManager implements MessageListenerRegister
     @Override
     public void registerMessageListeners(MessageListenerRegistry messageListeners, ModID modID) {
         // Client to server
-        messageListeners.registerValue(Identifier.of(modID, "requestInitialTileEntityData"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 0);}));
-        messageListeners.registerValue(Identifier.of(modID, "initiateClientItemEvent"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 1);}));
+        messageListeners.registerValue(Identifier.of(modID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        messageListeners.registerValue(Identifier.of(modID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
         // Server to client
-        messageListeners.registerValue(Identifier.of(modID, "updatePacket"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 0);}));
-        messageListeners.registerValue(Identifier.of(modID, "initiateTileEntityEvent"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 1);}));
-        messageListeners.registerValue(Identifier.of(modID, "initiateItemEvent"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 2);}));
-        messageListeners.registerValue(Identifier.of(modID, "announceBlockUpdate"), ((playerBase, customData) -> {handlePacket(playerBase, customData, 3);}));
+        messageListeners.registerValue(Identifier.of(modID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        messageListeners.registerValue(Identifier.of(modID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        messageListeners.registerValue(Identifier.of(modID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
+        messageListeners.registerValue(Identifier.of(modID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
     }
 
     static class TileEntityField
