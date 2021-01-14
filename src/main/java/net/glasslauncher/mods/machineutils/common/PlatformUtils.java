@@ -63,7 +63,7 @@ public class PlatformUtils {
             return true;
         }
         if ((tileentity instanceof InventoryBase) && (tileentity instanceof IHasGuiContainer)) {
-            GuiHelper.INSTANCE.openGUI(entityplayer, identifier, (InventoryBase) tileentity, ((IHasGuiContainer) tileentity).getGuiContainer(entityplayer.inventory));
+            GuiHelper.openGUI(entityplayer, identifier, (InventoryBase) tileentity, ((IHasGuiContainer) tileentity).getGuiContainer(entityplayer.inventory));
             return true;
         } else {
             return false;

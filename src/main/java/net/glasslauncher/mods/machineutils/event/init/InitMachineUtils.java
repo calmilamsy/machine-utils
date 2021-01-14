@@ -5,6 +5,7 @@ import net.modificationstation.stationapi.api.common.config.Category;
 import net.modificationstation.stationapi.api.common.config.Configuration;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationapi.api.common.mod.StationMod;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 
 public class InitMachineUtils implements StationMod {
     public static Configuration config;
@@ -17,7 +18,7 @@ public class InitMachineUtils implements StationMod {
     }
 
     @Override
-    public void init() {
+    public void init(ModID modID) {
         config = getDefaultConfig();
         generalConfig = config.getCategory("general");
         MessageListenerRegister.EVENT.register(new NetworkManager(), getModID());
