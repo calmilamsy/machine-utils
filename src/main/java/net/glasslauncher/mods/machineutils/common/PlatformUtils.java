@@ -58,7 +58,7 @@ public class PlatformUtils {
     }
 
     public static boolean launchGUI(PlayerBase entityplayer, TileEntityBase tileentity, Identifier identifier) {
-        if (identifier.getId().equals("ic2sl:nogui4u") && (tileentity instanceof InventoryBase)) {
+        if (identifier.id.equals("ic2sl:nogui4u") && (tileentity instanceof InventoryBase)) {
             entityplayer.openChestScreen((InventoryBase) tileentity);
             return true;
         }

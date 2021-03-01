@@ -18,8 +18,10 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:mod": [
-      "net.glasslauncher.mods.machineutils.event.init.InitMachineUtils"
+    "stationapi:event_bus": [
+      "net.glasslauncher.mods.machineutils.event.init.MachineUtilsConfig",
+      "net.glasslauncher.mods.machineutils.event.ingame.NetworkManager",
+      "net.glasslauncher.mods.machineutils.event.ingame.TickManager"
     ]
   },
   "mixins": [

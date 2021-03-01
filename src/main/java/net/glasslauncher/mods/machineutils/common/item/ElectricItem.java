@@ -25,7 +25,7 @@ public abstract class ElectricItem extends ItemBase
     }
 
     @Override
-    public int giveEnergyTo(ItemInstance itemstack, int i, int j, boolean flag) {
+    public int giveEnergyToOther(ItemInstance itemstack, int i, int j, boolean flag) {
         if (j < tier || itemstack.getDamage() == 1) {
             return 0;
         }

@@ -1,11 +1,13 @@
-package net.glasslauncher.mods.machineutils.common;
+package net.glasslauncher.mods.machineutils.event.ingame;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.machineutils.api.network.INetworkItemEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkTileEntityEventListener;
 import net.glasslauncher.mods.machineutils.api.network.INetworkUpdateListener;
+import net.glasslauncher.mods.machineutils.common.PlatformUtils;
 import net.glasslauncher.mods.machineutils.common.tileentity.WrenchableMachineTileEntity;
+import net.glasslauncher.mods.machineutils.event.init.MachineUtilsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
@@ -14,19 +16,21 @@ import net.minecraft.level.Level;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tileentity.TileEntityBase;
+import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.common.util.API;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
+import static net.glasslauncher.mods.machineutils.event.init.MachineUtilsConfig.MOD_ID;
 
 
-public class NetworkManager implements MessageListenerRegister
+public class NetworkManager
 {
     private static final int updatePeriod = 2;
     private static final Set<TileEntityField> fieldsToUpdateSet;
@@ -65,6 +69,7 @@ public class NetworkManager implements MessageListenerRegister
         }
     }
 
+    @API
     public static void initiateTileEntityEvent(TileEntityBase tileentity, int i, boolean flag)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
@@ -94,13 +99,14 @@ public class NetworkManager implements MessageListenerRegister
                             tileentity.y,
                             tileentity.z,
                             i});
-                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader);
+                    PacketHelper.sendTo(entityplayer, packet230modloader);
                     System.out.println("Sent packet");
                 }
             }
         }
     }
 
+    @API
     public static void initiateItemEvent(PlayerBase entityplayer, ItemInstance itemstack, int i, boolean flag)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
@@ -131,12 +137,13 @@ public class NetworkManager implements MessageListenerRegister
                             itemstack.getDamage(),
                             i});
                     packet230modloader.put(new String[]{entityplayer.name});
-                    PacketHelper.INSTANCE.sendTo(entityplayer2, packet230modloader);
+                    PacketHelper.sendTo(entityplayer2, packet230modloader);
                 }
             }
         }
     }
 
+    @API
     public static void announceBlockUpdate(Level world, int i, int j, int k)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
@@ -154,7 +161,7 @@ public class NetworkManager implements MessageListenerRegister
                             i,
                             j,
                             k});
-                    PacketHelper.INSTANCE.sendTo(entityplayer, packet230modloader);
+                    PacketHelper.sendTo(entityplayer, packet230modloader);
                 }
             }
         }
@@ -168,9 +175,10 @@ public class NetworkManager implements MessageListenerRegister
                 i,
                 j,
                 k});
-        PacketHelper.INSTANCE.send(customPacket);
+        PacketHelper.send(customPacket);
     }
 
+    @API
     public static void initiateClientItemEvent(ItemInstance itemstack, int i)
     {
         ItemBase item = itemstack.getType();
@@ -187,7 +195,7 @@ public class NetworkManager implements MessageListenerRegister
             customPacket.put(new int[] {itemstack.itemId,
                     itemstack.getDamage(),
                     i});
-            PacketHelper.INSTANCE.send(customPacket);
+            PacketHelper.send(customPacket);
         }
     }
 
@@ -352,7 +360,7 @@ public class NetworkManager implements MessageListenerRegister
     }
 
     private static void sendUpdatePacket() {
-        System.out.println("Update packet sent");
+        MachineUtilsConfig.LOGGER.debug("Sending update packet.");
         List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
         ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
         ServerLevel[] aServerLevel = worldList.toArray(aServerLevelHelper);
@@ -436,23 +444,25 @@ public class NetworkManager implements MessageListenerRegister
                     packet230modloader.put(ai);
                     packet230modloader.put(af);
                     packet230modloader.put(vector2.toArray(new String[0]));
-                    PacketHelper.INSTANCE.sendTo(obj, packet230modloader);
+                    PacketHelper.sendTo(obj, packet230modloader);
+                    MachineUtilsConfig.LOGGER.debug("Update packet sent.");
                 }
             }
         }
         fieldsToUpdateSet.clear();
     }
 
-    @Override
-    public void registerMessageListeners(MessageListenerRegistry messageListeners, ModID modID) {
+    @EventListener
+    public void registerMessageListeners(MessageListenerRegister event) {
+        MessageListenerRegistry registry = event.registry;
         // Client to server
-        messageListeners.registerValue(Identifier.of(modID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        messageListeners.registerValue(Identifier.of(modID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.registerValue(Identifier.of(MOD_ID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.registerValue(Identifier.of(MOD_ID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
         // Server to client
-        messageListeners.registerValue(Identifier.of(modID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        messageListeners.registerValue(Identifier.of(modID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
-        messageListeners.registerValue(Identifier.of(modID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
-        messageListeners.registerValue(Identifier.of(modID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
+        registry.registerValue(Identifier.of(MOD_ID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.registerValue(Identifier.of(MOD_ID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.registerValue(Identifier.of(MOD_ID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
+        registry.registerValue(Identifier.of(MOD_ID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
     }
 
     static class TileEntityField

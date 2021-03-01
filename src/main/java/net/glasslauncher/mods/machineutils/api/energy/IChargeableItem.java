@@ -8,9 +8,9 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.client.gui.Colors;
 import net.modificationstation.stationapi.api.client.gui.HasCustomTooltip;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
+import net.modificationstation.stationapi.api.common.gui.Colors;
 import net.modificationstation.stationapi.api.common.item.HasItemEntity;
 import net.modificationstation.stationapi.api.common.item.ItemEntity;
 import net.modificationstation.stationapi.api.common.item.ItemWithEntity;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, CustomItemOverlay {
 
 
-    default int giveEnergyTo(ItemInstance itemstack, int inputEnergy, int machineTier, boolean followTransferRate) {
+    default int giveEnergyToOther(ItemInstance itemstack, int inputEnergy, int machineTier, boolean followTransferRate) {
         if (machineTier < getTier(itemstack) || getEnergy(itemstack) >= getMaxEnergy(itemstack)) {
             return 0;
         }
@@ -44,7 +44,7 @@ public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, Custo
     int getTier(ItemInstance itemInstance);
 
     default int getTransfer(ItemInstance itemInstance) {
-        return getMaxEnergy(itemInstance) / 600;
+        return getTier(itemInstance) * 32;
     }
 
     default void setEnergy(ItemInstance itemInstance, int newEnergy) {
@@ -65,7 +65,7 @@ public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, Custo
     default List<String> getToolTip(String originalTooltip, ItemInstance itemInstance) {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add(originalTooltip);
-        arrayList.add(Colors.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colors.WHITE + "/" + Colors.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colors.WHITE + " EU stored");
+        arrayList.add("" + Colors.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colors.WHITE + "/" + Colors.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colors.WHITE + " EU stored");
         return arrayList;
     }
 

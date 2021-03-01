@@ -46,6 +46,10 @@ repositories {
 		name = "Jitpack"
 		url "https://jitpack.io/"
 	}
+	maven {
+		name = "Glass"
+		url "https://maven.glass-launcher.net/repo/"
+	}
 }
 
 minecraft {
@@ -84,7 +88,10 @@ dependencies {
 
 	modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
 
-	modImplementation "com.github.ModificationStation:StationAPI:660082a:dev"
+	modImplementation "net.modificationstation:StationAPI:2.0-PRE1"
+	implementation "com.github.jhalterman:typetools:87240d6"
+	implementation "com.github.benjiman:expressions:7ed6748"
+
 }
 
 processResources {

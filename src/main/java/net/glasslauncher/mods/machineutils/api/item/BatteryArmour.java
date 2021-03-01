@@ -12,7 +12,7 @@ public interface BatteryArmour extends IChargeableItem {
         IChargeableItem ichargeableitem = (IChargeableItem) itemToCharge.getType();
         int energyToTransfer = getTransfer(itemToDrain);
         if (energyToTransfer > 0) {
-            energyToTransfer = ichargeableitem.giveEnergyTo(itemToCharge, energyToTransfer, getTier(itemToDrain), true);
+            energyToTransfer = ichargeableitem.giveEnergyToOther(itemToCharge, energyToTransfer, getTier(itemToDrain), true);
             ((BatteryArmour) itemToDrain.getType()).addEnergy(itemToDrain, -energyToTransfer);
         }
     }
