@@ -67,7 +67,7 @@ public abstract class MachineBase extends WrenchableMachineTileEntity
         if (level.getTileEntity(x, y, z) != this) {
             return false;
         } else {
-            return entityplayer.method_1350((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D) <= 64D;
+            return entityplayer.distanceTo((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D) <= 64D;
         }
     }
 

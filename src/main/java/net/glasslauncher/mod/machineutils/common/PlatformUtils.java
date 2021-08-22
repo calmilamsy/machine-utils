@@ -11,7 +11,7 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.level.TileView;
+import net.minecraft.level.BlockView;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityBase;
@@ -70,7 +70,7 @@ public class PlatformUtils {
         }
     }
 
-    public static boolean isBlockOpaqueCube(TileView iblockaccess, int i, int j, int k) {
+    public static boolean isBlockOpaqueCube(BlockView iblockaccess, int i, int j, int k) {
         return iblockaccess.isFullOpaque(i, j, k);
     }
 

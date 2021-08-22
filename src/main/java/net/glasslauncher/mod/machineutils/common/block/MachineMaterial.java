@@ -23,7 +23,7 @@ public class MachineMaterial extends Material {
     }
 
     public MachineMaterial method_902() {
-        return (MachineMaterial) ((MaterialAccessor) this).invokeMethod_902();
+        return (MachineMaterial) ((MaterialAccessor) this).invokeSetOpaque();
     }
 
     public MachineMaterial breaksWhenPushed() {

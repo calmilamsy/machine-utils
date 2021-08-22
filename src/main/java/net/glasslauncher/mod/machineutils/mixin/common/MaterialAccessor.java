@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MaterialAccessor {
 
     @Invoker
-    Material invokeMethod_902();
+    Material invokeSetOpaque();
 
     @Invoker
     Material invokeRequiresTool();

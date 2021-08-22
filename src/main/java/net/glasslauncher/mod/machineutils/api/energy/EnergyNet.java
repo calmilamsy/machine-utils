@@ -158,7 +158,7 @@ public final class EnergyNet {
                                 }
                                 ienergyconductor2 = (IEnergyConductor) iterator5.next();
                                 tileentity = (TileEntityBase) ienergyconductor2;
-                            } while (!entityliving.boundingBox.method_90(Box.create(tileentity.x - 1, tileentity.y - 1, tileentity.z - 1, tileentity.x + 2, tileentity.y + 2, tileentity.z + 2)));
+                            } while (!entityliving.boundingBox.boxIntersects(Box.create(tileentity.x - 1, tileentity.y - 1, tileentity.z - 1, tileentity.x + 2, tileentity.y + 2, tileentity.z + 2)));
                             int l1 = j1 - ienergyconductor2.getInsulationEnergyAbsorption();
                             if (l1 > k1) {
                                 k1 = l1;

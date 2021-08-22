@@ -10,8 +10,8 @@ import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
-import net.minecraft.level.TileView;
 import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -43,7 +43,7 @@ public abstract class BlockMultiID extends BlockWithEntity {
         super(i, material);
     }
 
-    public static boolean isActive(TileView iblockaccess, int i, int j, int k) {
+    public static boolean isActive(BlockView iblockaccess, int i, int j, int k) {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
         if (tileentity instanceof WrenchableMachineTileEntity) {
             return ((WrenchableMachineTileEntity) tileentity).getActive();
@@ -63,12 +63,12 @@ public abstract class BlockMultiID extends BlockWithEntity {
     }
 
     @Override
-    public BlockMultiID sounds(BlockSounds sounds) {
-        return (BlockMultiID) super.sounds(sounds);
+    public BlockMultiID setSounds(BlockSounds sounds) {
+        return (BlockMultiID) super.setSounds(sounds);
     }
 
     @Override
-    public int getTextureForSide(TileView iblockaccess, int i, int j, int k, int l) {
+    public int getTextureForSide(BlockView iblockaccess, int i, int j, int k, int l) {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
         short word0 = (tileentity instanceof WrenchableMachineTileEntity) ? ((WrenchableMachineTileEntity) tileentity).getFacing() : 0;
         int i1 = iblockaccess.getTileMeta(i, j, k);

@@ -2,6 +2,7 @@ package net.glasslauncher.mod.machineutils.event.ingame;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.glasslauncher.mod.machineutils.event.ingame.NetworkManager.TileEntityField;
 import net.glasslauncher.mod.machineutils.event.init.MachineUtilsConfig;
 import net.glasslauncher.mod.machineutils.api.network.INetworkItemEventListener;
 import net.glasslauncher.mod.machineutils.api.network.INetworkTileEntityEventListener;
@@ -91,8 +92,8 @@ public class NetworkManager
                 }
                 if (i2 <= j) {
                     final Message packet230modloader = new Message(Identifier.of("machineutils:initiateTileEntityEvent"));
-                    packet230modloader.field_906 = true;
-                    packet230modloader.ints = new int[] {world.dimension.field_2179,
+                    packet230modloader.levelPacket = true;
+                    packet230modloader.ints = new int[] {world.dimension.id,
                             tileentity.x,
                             tileentity.y,
                             tileentity.z,
@@ -130,7 +131,7 @@ public class NetworkManager
                 }
                 if (i2 <= j) {
                     final Message packet230modloader = new Message(Identifier.of("machineutils:initiateItemEvent"));
-                    packet230modloader.field_906 = true;
+                    packet230modloader.levelPacket = true;
                     packet230modloader.ints = new int[] {itemstack.itemId,
                             itemstack.getDamage(),
                             i};
@@ -154,8 +155,8 @@ public class NetworkManager
                 final int l = Math.min(Math.abs(i - (int)entityplayer.x), Math.abs(k - (int)entityplayer.z));
                 if (l <= ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles()) {
                     final Message packet230modloader = new Message(Identifier.of( "machineutils:announceBlockUpdate"));
-                    packet230modloader.field_906 = true;
-                    packet230modloader.ints = new int[] {world.dimension.field_2179,
+                    packet230modloader.levelPacket = true;
+                    packet230modloader.ints = new int[] {world.dimension.id,
                             i,
                             j,
                             k};
@@ -168,8 +169,8 @@ public class NetworkManager
     public static void requestInitialTileEntityData(Level world, int i, int j, int k)
     {
         Message customPacket = new Message(Identifier.of("machineutils:requestInitialTileEntityData"));
-        customPacket.field_906 = true;
-        customPacket.ints = new int[] {world.dimension.field_2179,
+        customPacket.levelPacket = true;
+        customPacket.ints = new int[] {world.dimension.id,
                 i,
                 j,
                 k};
@@ -189,7 +190,7 @@ public class NetworkManager
         } else
         {
             Message customPacket = new Message(Identifier.of("machineutils:initiateClientItemEvent"));
-            customPacket.field_906 = true;
+            customPacket.levelPacket = true;
             customPacket.ints = new int[] {itemstack.itemId,
                     itemstack.getDamage(),
                     i};
@@ -204,7 +205,7 @@ public class NetworkManager
             {
                 if (packetType == 0 && customPacket.ints.length > 0) {
                     Level world = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world.dimension.field_2179 != customPacket.ints[0]) {
+                    if (world.dimension.id != customPacket.ints[0]) {
                         return;
                     }
                     int i = 0;
@@ -287,7 +288,7 @@ public class NetworkManager
                 }
                 if (packetType == 1 && customPacket.ints.length == 5) {
                     Level world1 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world1.dimension.field_2179 != customPacket.ints[0]) {
+                    if (world1.dimension.id != customPacket.ints[0]) {
                         return;
                     }
                     TileEntityBase tileentity = world1.getTileEntity(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
@@ -313,7 +314,7 @@ public class NetworkManager
                     }
                 } else if (packetType == 3 && customPacket.ints.length == 4) {
                     Level world3 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world3.dimension.field_2179 != customPacket.ints[0]) {
+                    if (world3.dimension.id != customPacket.ints[0]) {
                         return;
                     }
                     world3.method_243(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
@@ -329,7 +330,7 @@ public class NetworkManager
                 int j = 0;
                 while (j < i) {
                     final ServerLevel ServerLevel = aServerLevel[j];
-                    if (customPacket.ints[0] == (ServerLevel).dimension.field_2179) {
+                    if (customPacket.ints[0] == (ServerLevel).dimension.id) {
                         final TileEntityBase tileentity = ServerLevel.getTileEntity(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
                         if (tileentity instanceof WrenchableMachineTileEntity) {
                             for (String s : ((WrenchableMachineTileEntity)tileentity).getNetworkedFields()) {
@@ -369,11 +370,11 @@ public class NetworkManager
             //noinspection unchecked
             for (PlayerBase obj : (Iterable<PlayerBase>) ServerLevel.players) {
                 Message packet230modloader = new Message(Identifier.of("machineutils:updatePacket"));
-                packet230modloader.field_906 = true;
+                packet230modloader.levelPacket = true;
                 Vector<Float> vector = new Vector<>();
                 Vector<Integer> vector1 = new Vector<>();
                 Vector<String> vector2 = new Vector<>();
-                vector1.add(ServerLevel.dimension.field_2179);
+                vector1.add(ServerLevel.dimension.id);
 
                 for (TileEntityField tileentityfield : fieldsToUpdateSet) {
                     if ((!tileentityfield.te.isInvalid()) && (tileentityfield.te.level == ServerLevel) && ((tileentityfield.target == null) || (tileentityfield.target == obj))) {
