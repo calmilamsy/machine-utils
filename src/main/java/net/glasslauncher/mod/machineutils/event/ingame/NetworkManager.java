@@ -8,6 +8,7 @@ import net.glasslauncher.mod.machineutils.api.network.INetworkTileEntityEventLis
 import net.glasslauncher.mod.machineutils.api.network.INetworkUpdateListener;
 import net.glasslauncher.mod.machineutils.common.PlatformUtils;
 import net.glasslauncher.mod.machineutils.common.tileentity.WrenchableMachineTileEntity;
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
@@ -16,13 +17,12 @@ import net.minecraft.level.Level;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tileentity.TileEntityBase;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
-import net.modificationstation.stationapi.api.common.packet.PacketHelper;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.util.API;
+import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
+import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.packet.PacketHelper;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.util.API;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -92,11 +92,11 @@ public class NetworkManager
                 if (i2 <= j) {
                     final Message packet230modloader = new Message(Identifier.of("machineutils:initiateTileEntityEvent"));
                     packet230modloader.field_906 = true;
-                    packet230modloader.put(new int[] {world.dimension.field_2179,
+                    packet230modloader.ints = new int[] {world.dimension.field_2179,
                             tileentity.x,
                             tileentity.y,
                             tileentity.z,
-                            i});
+                            i};
                     PacketHelper.sendTo(entityplayer, packet230modloader);
                     System.out.println("Sent packet");
                 }
@@ -131,10 +131,10 @@ public class NetworkManager
                 if (i2 <= j) {
                     final Message packet230modloader = new Message(Identifier.of("machineutils:initiateItemEvent"));
                     packet230modloader.field_906 = true;
-                    packet230modloader.put(new int[] {itemstack.itemId,
+                    packet230modloader.ints = new int[] {itemstack.itemId,
                             itemstack.getDamage(),
-                            i});
-                    packet230modloader.put(new String[]{entityplayer.name});
+                            i};
+                    packet230modloader.strings = new String[]{entityplayer.name};
                     PacketHelper.sendTo(entityplayer2, packet230modloader);
                 }
             }
@@ -155,10 +155,10 @@ public class NetworkManager
                 if (l <= ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getViewRadiusInTiles()) {
                     final Message packet230modloader = new Message(Identifier.of( "machineutils:announceBlockUpdate"));
                     packet230modloader.field_906 = true;
-                    packet230modloader.put(new int[] {world.dimension.field_2179,
+                    packet230modloader.ints = new int[] {world.dimension.field_2179,
                             i,
                             j,
-                            k});
+                            k};
                     PacketHelper.sendTo(entityplayer, packet230modloader);
                 }
             }
@@ -169,10 +169,10 @@ public class NetworkManager
     {
         Message customPacket = new Message(Identifier.of("machineutils:requestInitialTileEntityData"));
         customPacket.field_906 = true;
-        customPacket.put(new int[] {world.dimension.field_2179,
+        customPacket.ints = new int[] {world.dimension.field_2179,
                 i,
                 j,
-                k});
+                k};
         PacketHelper.send(customPacket);
     }
 
@@ -190,9 +190,9 @@ public class NetworkManager
         {
             Message customPacket = new Message(Identifier.of("machineutils:initiateClientItemEvent"));
             customPacket.field_906 = true;
-            customPacket.put(new int[] {itemstack.itemId,
+            customPacket.ints = new int[] {itemstack.itemId,
                     itemstack.getDamage(),
-                    i});
+                    i};
             PacketHelper.send(customPacket);
         }
     }
@@ -202,16 +202,16 @@ public class NetworkManager
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
             label0:
             {
-                if (packetType == 0 && customPacket.ints().length > 0) {
+                if (packetType == 0 && customPacket.ints.length > 0) {
                     Level world = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world.dimension.field_2179 != customPacket.ints()[0]) {
+                    if (world.dimension.field_2179 != customPacket.ints[0]) {
                         return;
                     }
                     int i = 0;
                     int j = 0;
-                    for (int k = 1; k + 3 < customPacket.ints().length; k += 4) {
-                        TileEntityBase tileentity1 = world.getTileEntity(customPacket.ints()[k], customPacket.ints()[k + 1], customPacket.ints()[k + 2]);
-                        String s = customPacket.strings()[j];
+                    for (int k = 1; k + 3 < customPacket.ints.length; k += 4) {
+                        TileEntityBase tileentity1 = world.getTileEntity(customPacket.ints[k], customPacket.ints[k + 1], customPacket.ints[k + 2]);
+                        String s = customPacket.strings[j];
                         j++;
                         Field field = null;
                         try {
@@ -229,51 +229,51 @@ public class NetworkManager
                                 }
                                 field.setAccessible(true);
                             }
-                            switch (customPacket.ints()[k + 3]) {
+                            switch (customPacket.ints[k + 3]) {
                                 case 0: // '\0'
                                     if (tileentity1 != null) {
-                                        field.setFloat(tileentity1, customPacket.floats()[i]);
+                                        field.setFloat(tileentity1, customPacket.floats[i]);
                                     }
                                     i++;
                                     break;
 
                                 case 1: // '\001'
                                     if (tileentity1 != null) {
-                                        field.setInt(tileentity1, customPacket.ints()[k + 4]);
+                                        field.setInt(tileentity1, customPacket.ints[k + 4]);
                                     }
                                     k++;
                                     break;
 
                                 case 2: // '\002'
                                     if (tileentity1 != null) {
-                                        field.set(tileentity1, customPacket.strings()[j]);
+                                        field.set(tileentity1, customPacket.strings[j]);
                                     }
                                     j++;
                                     break;
 
                                 case 3: // '\003'
                                     if (tileentity1 != null) {
-                                        field.setBoolean(tileentity1, customPacket.ints()[k + 4] != 0);
+                                        field.setBoolean(tileentity1, customPacket.ints[k + 4] != 0);
                                     }
                                     k++;
                                     break;
 
                                 case 4: // '\004'
                                     if (tileentity1 != null) {
-                                        field.setByte(tileentity1, (byte) customPacket.ints()[k + 4]);
+                                        field.setByte(tileentity1, (byte) customPacket.ints[k + 4]);
                                     }
                                     k++;
                                     break;
 
                                 case 5: // '\005'
                                     if (tileentity1 != null) {
-                                        field.setShort(tileentity1, (short) customPacket.ints()[k + 4]);
+                                        field.setShort(tileentity1, (short) customPacket.ints[k + 4]);
                                     }
                                     k++;
                                     break;
 
                                 default:
-                                    throw new RuntimeException("Invalid field type index: " + customPacket.ints()[k + 3]);
+                                    throw new RuntimeException("Invalid field type index: " + customPacket.ints[k + 3]);
                             }
                         } catch (Exception exception) {
                             throw new RuntimeException(exception);
@@ -285,18 +285,18 @@ public class NetworkManager
 
                     break label0;
                 }
-                if (packetType == 1 && customPacket.ints().length == 5) {
+                if (packetType == 1 && customPacket.ints.length == 5) {
                     Level world1 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world1.dimension.field_2179 != customPacket.ints()[0]) {
+                    if (world1.dimension.field_2179 != customPacket.ints[0]) {
                         return;
                     }
-                    TileEntityBase tileentity = world1.getTileEntity(customPacket.ints()[1], customPacket.ints()[2], customPacket.ints()[3]);
+                    TileEntityBase tileentity = world1.getTileEntity(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
                     if (tileentity instanceof INetworkTileEntityEventListener) {
-                        ((INetworkTileEntityEventListener) tileentity).onNetworkEvent(customPacket.ints()[4]);
+                        ((INetworkTileEntityEventListener) tileentity).onNetworkEvent(customPacket.ints[4]);
                     }
                     break label0;
                 }
-                if (packetType == 2 && customPacket.ints().length == 3) {
+                if (packetType == 2 && customPacket.ints.length == 3) {
                     Level world2 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
                     Iterator<?> iterator = world2.players.iterator();
                     PlayerBase entityplayer;
@@ -306,22 +306,22 @@ public class NetworkManager
                         }
                         Object obj = iterator.next();
                         entityplayer = (PlayerBase) obj;
-                    } while (!entityplayer.name.equals(customPacket.strings()[0]));
-                    ItemBase item = ItemBase.byId[customPacket.ints()[0]];
+                    } while (!entityplayer.name.equals(customPacket.strings[0]));
+                    ItemBase item = ItemBase.byId[customPacket.ints[0]];
                     if (item instanceof INetworkItemEventListener) {
-                        ((INetworkItemEventListener) item).onNetworkEvent(customPacket.ints()[1], entityplayer, customPacket.ints()[2]);
+                        ((INetworkItemEventListener) item).onNetworkEvent(customPacket.ints[1], entityplayer, customPacket.ints[2]);
                     }
-                } else if (packetType == 3 && customPacket.ints().length == 4) {
+                } else if (packetType == 3 && customPacket.ints.length == 4) {
                     Level world3 = ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-                    if (world3.dimension.field_2179 != customPacket.ints()[0]) {
+                    if (world3.dimension.field_2179 != customPacket.ints[0]) {
                         return;
                     }
-                    world3.method_243(customPacket.ints()[1], customPacket.ints()[2], customPacket.ints()[3]);
+                    world3.method_243(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
                 }
             }
         }
         else {
-            if (packetType == 0 && customPacket.ints().length == 4) {
+            if (packetType == 0 && customPacket.ints.length == 4) {
                 final List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
                 final ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
                 final ServerLevel[] aServerLevel = worldList.toArray(aServerLevelHelper);
@@ -329,8 +329,8 @@ public class NetworkManager
                 int j = 0;
                 while (j < i) {
                     final ServerLevel ServerLevel = aServerLevel[j];
-                    if (customPacket.ints()[0] == (ServerLevel).dimension.field_2179) {
-                        final TileEntityBase tileentity = ServerLevel.getTileEntity(customPacket.ints()[1], customPacket.ints()[2], customPacket.ints()[3]);
+                    if (customPacket.ints[0] == (ServerLevel).dimension.field_2179) {
+                        final TileEntityBase tileentity = ServerLevel.getTileEntity(customPacket.ints[1], customPacket.ints[2], customPacket.ints[3]);
                         if (tileentity instanceof WrenchableMachineTileEntity) {
                             for (String s : ((WrenchableMachineTileEntity)tileentity).getNetworkedFields()) {
                                 NetworkManager.fieldsToUpdateSet.add(new TileEntityField(tileentity, s, player));
@@ -348,10 +348,10 @@ public class NetworkManager
                     }
                 }
             }
-            else if (packetType == 1 && customPacket.ints().length == 3) {
-                final ItemBase item = ItemBase.byId[customPacket.ints()[0]];
+            else if (packetType == 1 && customPacket.ints.length == 3) {
+                final ItemBase item = ItemBase.byId[customPacket.ints[0]];
                 if (item instanceof INetworkItemEventListener) {
-                    ((INetworkItemEventListener)item).onNetworkEvent(customPacket.ints()[1], player, customPacket.ints()[2]);
+                    ((INetworkItemEventListener)item).onNetworkEvent(customPacket.ints[1], player, customPacket.ints[2]);
                 }
             }
         }
@@ -439,9 +439,9 @@ public class NetworkManager
                         af[(k++)] = float1;
                     }
 
-                    packet230modloader.put(ai);
-                    packet230modloader.put(af);
-                    packet230modloader.put(vector2.toArray(new String[0]));
+                    packet230modloader.ints = ai;
+                    packet230modloader.floats = af;
+                    packet230modloader.strings = vector2.toArray(new String[0]);
                     PacketHelper.sendTo(obj, packet230modloader);
                     MachineUtilsConfig.LOGGER.debug("Update packet sent.");
                 }
@@ -451,16 +451,16 @@ public class NetworkManager
     }
 
     @EventListener
-    public void registerMessageListeners(MessageListenerRegister event) {
+    public void registerMessageListeners(MessageListenerRegistryEvent event) {
         MessageListenerRegistry registry = event.registry;
         // Client to server
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
         // Server to client
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
-        registry.registerValue(Identifier.of(MachineUtilsConfig.MOD_ID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
+        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
     }
 
     static class TileEntityField

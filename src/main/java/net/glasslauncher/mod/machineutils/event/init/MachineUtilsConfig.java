@@ -1,15 +1,14 @@
 package net.glasslauncher.mod.machineutils.event.init;
 
-import net.modificationstation.stationapi.api.common.config.Category;
-import net.modificationstation.stationapi.api.common.config.Configuration;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.mod.Init;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.common.registry.ModID;
-import net.modificationstation.stationapi.api.common.util.API;
-import net.modificationstation.stationapi.api.common.util.Null;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.config.Category;
+import net.modificationstation.stationapi.api.config.Configuration;
+import net.modificationstation.stationapi.api.event.mod.InitEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.API;
+import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 public class MachineUtilsConfig {
     @Entrypoint.Config
@@ -30,7 +29,7 @@ public class MachineUtilsConfig {
     }
 
     @EventListener
-    public void init(Init event) {
+    public void init(InitEvent event) {
         generalConfig = CONFIG.getCategory("general");
         CONFIG.save();
     }

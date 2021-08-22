@@ -8,12 +8,12 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.client.gui.HasCustomTooltip;
-import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
-import net.modificationstation.stationapi.api.common.gui.Colors;
-import net.modificationstation.stationapi.api.common.item.HasItemEntity;
-import net.modificationstation.stationapi.api.common.item.ItemEntity;
-import net.modificationstation.stationapi.api.common.item.ItemWithEntity;
+import net.modificationstation.stationapi.api.client.gui.CustomItemOverlay;
+import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
+import net.modificationstation.stationapi.api.gui.Colors;
+import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, CustomItemOverlay {
+public interface IChargeableItem extends CustomTooltipProvider, ItemWithEntity, CustomItemOverlay {
 
 
     default int giveEnergyToOther(ItemInstance itemstack, int inputEnergy, int machineTier, boolean followTransferRate) {
@@ -62,11 +62,11 @@ public interface IChargeableItem extends HasCustomTooltip, ItemWithEntity, Custo
     }
 
     @Override
-    default List<String> getToolTip(String originalTooltip, ItemInstance itemInstance) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add(originalTooltip);
-        arrayList.add("" + Colors.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colors.WHITE + "/" + Colors.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colors.WHITE + " EU stored");
-        return arrayList;
+    default String[] getTooltip(ItemInstance itemInstance, String originalTooltip) {
+        return new String[]{
+                originalTooltip,
+                "" + Colors.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colors.WHITE + "/" + Colors.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colors.WHITE + " EU stored"
+        };
     }
 
     @Override

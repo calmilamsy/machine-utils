@@ -18,8 +18,8 @@ import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
-import net.modificationstation.stationapi.api.common.gui.GuiHelper;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import org.lwjgl.input.Keyboard;
 
 import java.io.File;

@@ -1,7 +1,7 @@
 package net.glasslauncher.mod.machineutils.api.item;
 
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.common.item.ItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
 
 public class ItemWithEnergy implements ItemEntity {
     public int energy;
