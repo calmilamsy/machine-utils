@@ -1,4 +1,4 @@
-package net.glasslauncher.mod.machineutils.common.tileentity;
+package net.glasslauncher.mod.machineutils.impl.common.tileentity;
 
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;

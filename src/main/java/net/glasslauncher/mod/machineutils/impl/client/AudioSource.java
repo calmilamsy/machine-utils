@@ -1,8 +1,8 @@
-package net.glasslauncher.mod.machineutils.client;
+package net.glasslauncher.mod.machineutils.impl.client;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.glasslauncher.mod.machineutils.common.AudioPosition;
-import net.glasslauncher.mod.machineutils.common.PositionSpec;
+import net.glasslauncher.mod.machineutils.impl.common.AudioPosition;
+import net.glasslauncher.mod.machineutils.impl.common.PositionSpec;
 import net.glasslauncher.mod.machineutils.mixin.client.SoundHelperAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.SoundEntry;

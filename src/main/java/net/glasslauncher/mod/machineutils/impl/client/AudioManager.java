@@ -1,10 +1,10 @@
-package net.glasslauncher.mod.machineutils.client;
+package net.glasslauncher.mod.machineutils.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.glasslauncher.mod.machineutils.common.AudioPosition;
-import net.glasslauncher.mod.machineutils.common.PositionSpec;
-import net.glasslauncher.mod.machineutils.event.init.MachineUtilsConfig;
+import net.glasslauncher.mod.machineutils.impl.common.AudioPosition;
+import net.glasslauncher.mod.machineutils.impl.common.PositionSpec;
+import net.glasslauncher.mod.machineutils.impl.event.init.MachineUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
@@ -15,9 +15,6 @@ import paulscode.sound.SoundSystemConfig;
 import java.lang.reflect.Field;
 import java.nio.IntBuffer;
 import java.util.*;
-
-import static net.glasslauncher.mod.machineutils.event.init.MachineUtilsConfig.CONFIG;
-import static net.glasslauncher.mod.machineutils.event.init.MachineUtilsConfig.generalConfig;
 
 
 
@@ -38,16 +35,19 @@ public final class AudioManager {
     }
 
     public static void initialize() {
-        MachineUtilsConfig.LOGGER.info("Loading sound manager...");
-        enabled = generalConfig.getProperty("soundsEnabled", FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER && enabled).getBooleanValue();
-        maxSourceCount = generalConfig.getProperty("soundSourceLimit", maxSourceCount).getIntValue();
-        CONFIG.save();
+        MachineUtils.LOGGER.info("Loading sound manager...");
+        enabled = MachineUtils.generalConfig.soundsEnabled;
+        maxSourceCount = MachineUtils.generalConfig.soundSourceLimit;
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            MachineUtils.LOGGER.warn("Running on a server! Disabling sounds.");
+            enabled = false;
+        }
         if (maxSourceCount <= 6) {
-            MachineUtilsConfig.LOGGER.warn("Max sound source count lower than 6! Disabling sounds.");
+            MachineUtils.LOGGER.warn("Max sound source count lower than 6! Disabling sounds.");
             enabled = false;
         }
         if (!enabled) {
-            MachineUtilsConfig.LOGGER.info("Sound manager is disabled in config. Disabling sounds.");
+            MachineUtils.LOGGER.info("Sound manager is disabled in config. Disabling sounds.");
             return;
         }
         int i = 0;
@@ -64,13 +64,13 @@ public final class AudioManager {
             }
             AL.destroy();
         } catch (Exception ignored) {
-            MachineUtilsConfig.LOGGER.info("An exception occurred while setting up the sound system. Disabling sounds.");
+            MachineUtils.LOGGER.info("An exception occurred while setting up the sound system. Disabling sounds.");
         }
         maxSourceCount = i;
         if (maxSourceCount < 6) {
             enabled = false;
         } else {
-            MachineUtilsConfig.LOGGER.info("Using " + maxSourceCount + " audio sources.");
+            MachineUtils.LOGGER.info("Using " + maxSourceCount + " audio sources.");
             SoundSystemConfig.setNumberStreamingChannels(streamingSourceCount);
             SoundSystemConfig.setNumberNormalChannels(maxSourceCount - streamingSourceCount);
         }

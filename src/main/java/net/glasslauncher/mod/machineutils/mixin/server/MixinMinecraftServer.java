@@ -1,7 +1,7 @@
 package net.glasslauncher.mod.machineutils.mixin.server;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.glasslauncher.mod.machineutils.event.ingame.TickManager;
+import net.glasslauncher.mod.machineutils.impl.event.ingame.TickManager;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

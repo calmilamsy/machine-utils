@@ -10,14 +10,12 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.client.gui.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
-import net.modificationstation.stationapi.api.gui.Colors;
 import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
 import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
 import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
+import net.modificationstation.stationapi.api.util.Colours;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -65,7 +63,7 @@ public interface IChargeableItem extends CustomTooltipProvider, ItemWithEntity, 
     default String[] getTooltip(ItemInstance itemInstance, String originalTooltip) {
         return new String[]{
                 originalTooltip,
-                "" + Colors.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colors.WHITE + "/" + Colors.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colors.WHITE + " EU stored"
+                "" + Colours.RED + ((IChargeableItem) itemInstance.getType()).getEnergy(itemInstance) + Colours.WHITE + "/" + Colours.DARK_AQUA + ((IChargeableItem) itemInstance.getType()).getMaxEnergy(itemInstance) + Colours.WHITE + " EU stored"
         };
     }
 

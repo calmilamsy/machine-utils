@@ -1,8 +1,8 @@
-package net.glasslauncher.mod.machineutils.common.block;
+package net.glasslauncher.mod.machineutils.impl.common.block;
 
-import net.glasslauncher.mod.machineutils.common.PlatformUtils;
-import net.glasslauncher.mod.machineutils.common.StackUtil;
-import net.glasslauncher.mod.machineutils.common.tileentity.WrenchableMachineTileEntity;
+import net.glasslauncher.mod.machineutils.impl.common.PlatformUtils;
+import net.glasslauncher.mod.machineutils.impl.common.StackUtil;
+import net.glasslauncher.mod.machineutils.impl.common.tileentity.WrenchableMachineTileEntity;
 import net.minecraft.block.BlockSounds;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.material.Material;

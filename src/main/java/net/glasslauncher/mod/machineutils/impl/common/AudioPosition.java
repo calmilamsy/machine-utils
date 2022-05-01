@@ -1,4 +1,4 @@
-package net.glasslauncher.mod.machineutils.common;
+package net.glasslauncher.mod.machineutils.impl.common;
 
 import net.minecraft.entity.EntityBase;
 import net.minecraft.tileentity.TileEntityBase;

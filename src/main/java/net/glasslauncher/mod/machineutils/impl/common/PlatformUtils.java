@@ -1,9 +1,9 @@
-package net.glasslauncher.mod.machineutils.common;
+package net.glasslauncher.mod.machineutils.impl.common;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mod.machineutils.api.block.IHasGuiContainer;
-import net.glasslauncher.mod.machineutils.client.Client;
+import net.glasslauncher.mod.machineutils.impl.client.Client;
 import net.minecraft.block.BlockBase;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.container.slot.Slot;
@@ -52,7 +52,7 @@ public class PlatformUtils {
 
     public static boolean isSimulating() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            return !Client.getMinecraft().level.isClient;
+            return !Client.getMinecraft().level.isServerSide;
         }
         return true;
     }

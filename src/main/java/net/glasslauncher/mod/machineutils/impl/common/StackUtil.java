@@ -1,4 +1,4 @@
-package net.glasslauncher.mod.machineutils.common;
+package net.glasslauncher.mod.machineutils.impl.common;
 
 import net.glasslauncher.mod.machineutils.api.Direction;
 import net.minecraft.entity.Item;

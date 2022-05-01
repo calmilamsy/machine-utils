@@ -1,4 +1,4 @@
-package net.glasslauncher.mod.machineutils.common.block;
+package net.glasslauncher.mod.machineutils.impl.common.block;
 
 import net.glasslauncher.mod.machineutils.mixin.common.MaterialAccessor;
 import net.minecraft.block.BlockSounds;

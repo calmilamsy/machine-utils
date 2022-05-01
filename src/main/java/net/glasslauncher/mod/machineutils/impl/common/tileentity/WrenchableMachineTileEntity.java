@@ -1,8 +1,8 @@
-package net.glasslauncher.mod.machineutils.common.tileentity;
+package net.glasslauncher.mod.machineutils.impl.common.tileentity;
 
 import net.glasslauncher.mod.machineutils.api.block.IWrenchable;
 import net.glasslauncher.mod.machineutils.api.network.INetworkUpdateListener;
-import net.glasslauncher.mod.machineutils.event.ingame.NetworkManager;
+import net.glasslauncher.mod.machineutils.impl.event.ingame.NetworkManager;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.io.CompoundTag;

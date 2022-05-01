@@ -1,6 +1,6 @@
 package net.glasslauncher.mod.machineutils.mixin.client;
 
-import net.glasslauncher.mod.machineutils.event.ingame.TickManager;
+import net.glasslauncher.mod.machineutils.impl.event.ingame.TickManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sortme.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;

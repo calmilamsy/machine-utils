@@ -1,14 +1,13 @@
-package net.glasslauncher.mod.machineutils.event.ingame;
+package net.glasslauncher.mod.machineutils.impl.event.ingame;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.glasslauncher.mod.machineutils.event.ingame.NetworkManager.TileEntityField;
-import net.glasslauncher.mod.machineutils.event.init.MachineUtilsConfig;
+import net.glasslauncher.mod.machineutils.impl.event.init.MachineUtils;
 import net.glasslauncher.mod.machineutils.api.network.INetworkItemEventListener;
 import net.glasslauncher.mod.machineutils.api.network.INetworkTileEntityEventListener;
 import net.glasslauncher.mod.machineutils.api.network.INetworkUpdateListener;
-import net.glasslauncher.mod.machineutils.common.PlatformUtils;
-import net.glasslauncher.mod.machineutils.common.tileentity.WrenchableMachineTileEntity;
+import net.glasslauncher.mod.machineutils.impl.common.PlatformUtils;
+import net.glasslauncher.mod.machineutils.impl.common.tileentity.WrenchableMachineTileEntity;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
@@ -359,7 +358,7 @@ public class NetworkManager
     }
 
     private static void sendUpdatePacket() {
-        MachineUtilsConfig.LOGGER.debug("Sending update packet.");
+        MachineUtils.LOGGER.debug("Sending update packet.");
         List<ServerLevel> worldList = Arrays.asList(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).levels);
         ServerLevel[] aServerLevelHelper = new ServerLevel[worldList.size()];
         ServerLevel[] aServerLevel = worldList.toArray(aServerLevelHelper);
@@ -444,7 +443,7 @@ public class NetworkManager
                     packet230modloader.floats = af;
                     packet230modloader.strings = vector2.toArray(new String[0]);
                     PacketHelper.sendTo(obj, packet230modloader);
-                    MachineUtilsConfig.LOGGER.debug("Update packet sent.");
+                    MachineUtils.LOGGER.debug("Update packet sent.");
                 }
             }
         }
@@ -455,13 +454,13 @@ public class NetworkManager
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
         MessageListenerRegistry registry = event.registry;
         // Client to server
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "requestInitialTileEntityData"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "initiateClientItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
         // Server to client
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
-        registry.register(Identifier.of(MachineUtilsConfig.MOD_ID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "updatePacket"), ((playerBase, customData) -> handlePacket(playerBase, customData, 0)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "initiateTileEntityEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 1)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "initiateItemEvent"), ((playerBase, customData) -> handlePacket(playerBase, customData, 2)));
+        registry.register(Identifier.of(MachineUtils.MOD_ID, "announceBlockUpdate"), ((playerBase, customData) -> handlePacket(playerBase, customData, 3)));
     }
 
     static class TileEntityField

@@ -1,6 +1,6 @@
-package net.glasslauncher.mod.machineutils.event.ingame;
+package net.glasslauncher.mod.machineutils.impl.event.ingame;
 
-import net.glasslauncher.mod.machineutils.client.AudioManager;
+import net.glasslauncher.mod.machineutils.impl.client.AudioManager;
 import net.glasslauncher.mod.machineutils.api.energy.EnergyNet;
 import net.minecraft.entity.player.PlayerBase;
 

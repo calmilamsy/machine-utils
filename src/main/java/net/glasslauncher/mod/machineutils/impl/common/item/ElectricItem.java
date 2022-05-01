@@ -1,8 +1,8 @@
-package net.glasslauncher.mod.machineutils.common.item;
+package net.glasslauncher.mod.machineutils.impl.common.item;
 
 import net.glasslauncher.mod.machineutils.api.energy.IChargeableItem;
-import net.glasslauncher.mod.machineutils.common.MachineUtils;
-import net.glasslauncher.mod.machineutils.common.PlatformUtils;
+import net.glasslauncher.mod.machineutils.impl.common.MachineUtils;
+import net.glasslauncher.mod.machineutils.impl.common.PlatformUtils;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
