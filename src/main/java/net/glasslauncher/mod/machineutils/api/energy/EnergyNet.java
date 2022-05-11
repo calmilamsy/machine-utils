@@ -21,7 +21,7 @@ public final class EnergyNet {
     }
 
     private EnergyNet(Level world1) {
-        energySourceToEnergyPathMap = new HashMap();
+        energySourceToEnergyPathMap = new HashMap<>();
         world = world1;
     }
 
@@ -36,18 +36,13 @@ public final class EnergyNet {
     }
 
     public static void onTick() {
-        Iterator iterator = entityLivingToShockEnergyMap.entrySet().iterator();
-        do {
-            if (!iterator.hasNext()) {
-                break;
-            }
-            java.util.Map.Entry entry = (java.util.Map.Entry) iterator.next();
-            Living entityliving = (Living) entry.getKey();
-            int i = (((Integer) entry.getValue()).intValue() + 63) / 64;
+        for (Map.Entry<Living, Integer> entry : entityLivingToShockEnergyMap.entrySet()) {
+            Living entityliving = entry.getKey();
+            int i = (entry.getValue() + 63) / 64;
             if (entityliving.isAlive()) {
                 entityliving.damage(null, i);
             }
-        } while (true);
+        }
         entityLivingToShockEnergyMap.clear();
     }
 
@@ -232,8 +227,8 @@ public final class EnergyNet {
     }
 
     public List discover(TileEntityBase tileentity, boolean flag, int i) {
-        HashMap hashmap = new HashMap();
-        LinkedList linkedlist = new LinkedList();
+        HashMap<TileEntityBase, EnergyBlockLink> hashmap = new HashMap<>();
+        LinkedList<TileEntityBase> linkedlist = new LinkedList<>();
         linkedlist.add(tileentity);
         do {
             if (linkedlist.isEmpty()) {
@@ -350,12 +345,11 @@ public final class EnergyNet {
         return linkedlist1;
     }
 
-    public List getValidReceivers(TileEntityBase tileentity, boolean flag) {
-        LinkedList linkedlist = new LinkedList();
+    public List<EnergyTarget> getValidReceivers(TileEntityBase tileentity, boolean flag) {
+        LinkedList<EnergyTarget> linkedlist = new LinkedList<>();
         Direction[] adirection = Direction.values();
         int i = adirection.length;
-        for (int j = 0; j < i; j++) {
-            Direction direction = adirection[j];
+        for (Direction direction : adirection) {
             TileEntityBase tileentity1 = direction.applyToTileEntity(tileentity);
             if (!(tileentity1 instanceof IEnergyTile) || !((IEnergyTile) tileentity1).isAddedToEnergyNet()) {
                 continue;
@@ -395,7 +389,7 @@ public final class EnergyNet {
 
         TileEntityBase target;
         Direction targetDirection;
-        Set conductors;
+        Set<IEnergyConductor> conductors;
         int minX;
         int minY;
         int minZ;
@@ -410,7 +404,7 @@ public final class EnergyNet {
 
         EnergyPath() {
             target = null;
-            conductors = new HashSet();
+            conductors = new HashSet<>();
             minX = 0x7fffffff;
             minY = 0x7fffffff;
             minZ = 0x7fffffff;
