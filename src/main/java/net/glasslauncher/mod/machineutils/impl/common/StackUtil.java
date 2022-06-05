@@ -14,12 +14,10 @@ import java.util.List;
 
 public class StackUtil {
 
-    public static void distributeDrop(TileEntityBase tileentity, List list) {
+    public static void distributeDrop(TileEntityBase tileentity, List<ItemInstance> list) {
         Direction[] adirection = Direction.values();
-        int i = adirection.length;
         label0:
-        for (int j = 0; j < i; j++) {
-            Direction direction = adirection[j];
+        for (Direction direction : adirection) {
             if (list.isEmpty()) {
                 break;
             }
@@ -33,9 +31,7 @@ public class StackUtil {
             }
             if (tileentity1 instanceof TileEntityChest) {
                 Direction[] adirection1 = Direction.values();
-                int k = adirection1.length;
-                for (int l = 0; l < k; l++) {
-                    Direction direction1 = adirection1[l];
+                for (Direction direction1 : adirection1) {
                     if (direction1 == Direction.YN || direction1 == Direction.YP) {
                         continue;
                     }
@@ -48,7 +44,7 @@ public class StackUtil {
                 }
 
             }
-            Iterator iterator1 = list.iterator();
+            Iterator<ItemInstance> iterator1 = list.iterator();
             do {
                 ItemInstance itemstack1;
                 do {
@@ -56,7 +52,7 @@ public class StackUtil {
                         if (!iterator1.hasNext()) {
                             continue label0;
                         }
-                        itemstack1 = (ItemInstance) iterator1.next();
+                        itemstack1 = iterator1.next();
                     } while (itemstack1 == null);
                     putInInventory(((InventoryBase) (obj)), itemstack1);
                 } while (itemstack1.count != 0);
@@ -65,8 +61,8 @@ public class StackUtil {
         }
 
         ItemInstance itemstack;
-        for (Iterator iterator = list.iterator(); iterator.hasNext(); dropAsEntity(tileentity.level, tileentity.x, tileentity.y, tileentity.z, itemstack)) {
-            itemstack = (ItemInstance) iterator.next();
+        for (Iterator<ItemInstance> iterator = list.iterator(); iterator.hasNext(); dropAsEntity(tileentity.level, tileentity.x, tileentity.y, tileentity.z, itemstack)) {
+            itemstack = iterator.next();
         }
 
         list.clear();
@@ -124,9 +120,7 @@ public class StackUtil {
     }
 
     public static void dropAsEntity(Level world, int i, int j, int k, ItemInstance itemstack) {
-        if (itemstack == null) {
-            return;
-        } else {
+        if (itemstack != null) {
             double d = 0.69999999999999996D;
             double d1 = (double) world.rand.nextFloat() * d + (1.0D - d) * 0.5D;
             double d2 = (double) world.rand.nextFloat() * d + (1.0D - d) * 0.5D;
@@ -134,7 +128,6 @@ public class StackUtil {
             Item entityitem = new Item(world, (double) i + d1, (double) j + d2, (double) k + d3, itemstack);
             entityitem.pickupDelay = 10;
             world.spawnEntity(entityitem);
-            return;
         }
     }
 }

@@ -17,11 +17,9 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-
 
 public abstract class BlockMultiID extends BlockWithEntity {
+    public Identifier texture;
 
     public static final int[][] sideAndFacingToSpriteOffset = {
             {
@@ -67,6 +65,16 @@ public abstract class BlockMultiID extends BlockWithEntity {
         return (BlockMultiID) super.setSounds(sounds);
     }
 
+    /**
+     *
+     * @param texture Texture to use. Uses an identifier.
+     * @return Current instance
+     */
+    public BlockMultiID setTexture(Identifier texture) {
+        this.texture = texture;
+        return this;
+    }
+
     @Override
     public int getTextureForSide(BlockView iblockaccess, int i, int j, int k, int l) {
         TileEntityBase tileentity = iblockaccess.getTileEntity(i, j, k);
@@ -102,13 +110,12 @@ public abstract class BlockMultiID extends BlockWithEntity {
 
     public abstract Identifier getGui(Level world, int i, int j, int k, PlayerBase entityplayer);
 
-    public ArrayList getBlockDropped(Level world, int i, int j, int k, int l) {
-        ArrayList arraylist = new ArrayList();
+    public ArrayList<ItemInstance> getBlockDropped(Level world, int i, int j, int k, int l) {
+        ArrayList<ItemInstance> arraylist = new ArrayList<>();
         for (int bruh = 0; bruh < this.getDropCount(world.rand); bruh++)
             arraylist.add(new ItemInstance(this.getDropId(l, world.rand), 1, this.droppedMeta(l)));
         TileEntityBase tileentity = world.getTileEntity(i, j, k);
-        if (tileentity instanceof InventoryBase) {
-            InventoryBase iinventory = (InventoryBase) tileentity;
+        if (tileentity instanceof InventoryBase iinventory) {
             for (int i1 = 0; i1 < iinventory.getInventorySize(); i1++) {
                 ItemInstance itemstack = iinventory.getInventoryItem(i1);
                 if (itemstack != null) {
@@ -138,8 +145,7 @@ public abstract class BlockMultiID extends BlockWithEntity {
     public void onBlockRemoved(Level world, int i, int j, int k) {
 
         boolean flag = true;
-        for (Iterator iterator = getBlockDropped(world, i, j, k, world.getTileMeta(i, j, k)).iterator(); iterator.hasNext(); ) {
-            ItemInstance itemstack = (ItemInstance) iterator.next();
+        for (ItemInstance itemstack : getBlockDropped(world, i, j, k, world.getTileMeta(i, j, k))) {
             if (flag) {
                 flag = false;
             } else {
@@ -160,21 +166,14 @@ public abstract class BlockMultiID extends BlockWithEntity {
         } else {
             int l = MathHelper.floor((double) ((entityliving.yaw * 4F) / 360F) + 0.5D) & 3;
             switch (l) {
-                case 0: // '\0'
-                    tileentityblock.setFacing((short) 2);
-                    break;
-
-                case 1: // '\001'
-                    tileentityblock.setFacing((short) 5);
-                    break;
-
-                case 2: // '\002'
-                    tileentityblock.setFacing((short) 3);
-                    break;
-
-                case 3: // '\003'
-                    tileentityblock.setFacing((short) 4);
-                    break;
+                case 0 -> // '\0'
+                        tileentityblock.setFacing((short) 2);
+                case 1 -> // '\001'
+                        tileentityblock.setFacing((short) 5);
+                case 2 -> // '\002'
+                        tileentityblock.setFacing((short) 3);
+                case 3 -> // '\003'
+                        tileentityblock.setFacing((short) 4);
             }
         }
     }

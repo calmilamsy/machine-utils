@@ -20,12 +20,10 @@ public class AudioPosition {
         if (obj instanceof AudioPosition) {
             return (AudioPosition) obj;
         }
-        if (obj instanceof EntityBase) {
-            EntityBase entity = (EntityBase) obj;
+        if (obj instanceof EntityBase entity) {
             return new AudioPosition((float) entity.x, (float) entity.y, (float) entity.z);
         }
-        if (obj instanceof TileEntityBase) {
-            TileEntityBase tileentity = (TileEntityBase) obj;
+        if (obj instanceof TileEntityBase tileentity) {
             return new AudioPosition((float) tileentity.x + 0.5F, (float) tileentity.y + 0.5F, (float) tileentity.z + 0.5F);
         } else {
             return null;

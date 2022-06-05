@@ -22,7 +22,7 @@ public class MachineMaterial extends Material {
         return (MachineMaterial) ((MaterialAccessor) this).invokeBurnable();
     }
 
-    public MachineMaterial method_902() {
+    public MachineMaterial setOpaque() {
         return (MachineMaterial) ((MaterialAccessor) this).invokeSetOpaque();
     }
 

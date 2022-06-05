@@ -17,8 +17,7 @@ public class TickManager {
         globalTicker = 0;
     }
 
-    public static void onTickInGame(List<PlayerBase> list) {
-
+    public static void onTickInGame() {
         if (globalTicker % 128 == 0) {
             updateWind();
         }
@@ -43,9 +42,6 @@ public class TickManager {
         }
         if (random.nextInt(100) <= j) {
             windStrength--;
-            return;
-        } else {
-            return;
         }
     }
 }

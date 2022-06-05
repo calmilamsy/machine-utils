@@ -5,12 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "client.ItemRendererAccessor",
-    "common.BlockBaseAccessor",
     "common.EntityBaseAccessor",
-    "common.FireAccessor",
     "common.LivingAccessor",
-    "common.MaterialAccessor",
-    "common.ToolAccessor"
+    "common.MaterialAccessor"
   ],
   "server": [
     "server.MixinMinecraftServer"

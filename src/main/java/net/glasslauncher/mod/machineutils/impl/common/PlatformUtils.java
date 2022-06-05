@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mod.machineutils.api.block.IHasGuiContainer;
 import net.glasslauncher.mod.machineutils.impl.client.Client;
 import net.minecraft.block.BlockBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.container.slot.Slot;
 import net.minecraft.entity.EntityBase;
@@ -34,7 +35,7 @@ public class PlatformUtils {
 
     public static File getMinecraftDir() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            return Client.getMinecraft().getGameDirectory();
+            return Minecraft.getGameDirectory();
         }
         return new File(".");
     }

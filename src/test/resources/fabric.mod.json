@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "machineutilstest",
+  "version": "${version}",
+
+  "name": "Machine Utils Test",
+  "description": "Test mod.",
+  "authors": [
+    "calmilamsy"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/",
+    "sources": "https://github.com/calmilamsy/machine-utils"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/machineutilstest/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.glasslauncher.mod.machineutils.test.MachineUtilsTest"
+    ]
+  },
+  "mixins": [
+  ],
+
+  "depends": {
+    "minecraft": "1.0.0-beta.7.3"
+  }
+}

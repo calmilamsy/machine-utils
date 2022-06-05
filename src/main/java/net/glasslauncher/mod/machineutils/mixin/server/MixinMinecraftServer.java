@@ -18,7 +18,7 @@ public class MixinMinecraftServer {
         long newClock;
         newClock = minecraft.levels[0].getLevelTime();
         if (newClock != clock) {
-            TickManager.onTickInGame(minecraft.serverPlayerConnectionManager.players);
+            TickManager.onTickInGame();
         }
         clock = newClock;
     }

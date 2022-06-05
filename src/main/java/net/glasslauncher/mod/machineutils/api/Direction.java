@@ -33,8 +33,7 @@ public enum Direction {
         int i = dir - getSign();
         Direction[] adirection = values();
         int j = adirection.length;
-        for (int k = 0; k < j; k++) {
-            Direction direction = adirection[k];
+        for (Direction direction : adirection) {
             if (direction.dir == i) {
                 return direction;
             }

@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.glasslauncher.mod.machineutils.impl.event.init.MachineUtils",
+      "net.glasslauncher.mod.machineutils.impl.event.init.MachineUtilsConfig",
       "net.glasslauncher.mod.machineutils.impl.event.ingame.NetworkManager",
       "net.glasslauncher.mod.machineutils.impl.event.ingame.TickManager"
     ]

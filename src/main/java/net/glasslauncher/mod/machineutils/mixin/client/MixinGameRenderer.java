@@ -23,7 +23,7 @@ public class MixinGameRenderer {
         if (minecraft.level != null && minecraft.player != null) {
             newClock = minecraft.level.getLevelTime();
             if (newClock != clock) {
-                TickManager.onTickInGame(minecraft.level.players);
+                TickManager.onTickInGame();
             }
         }
         clock = newClock;

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mod.machineutils.impl.common.AudioPosition;
 import net.glasslauncher.mod.machineutils.impl.common.PositionSpec;
-import net.glasslauncher.mod.machineutils.impl.event.init.MachineUtils;
+import net.glasslauncher.mod.machineutils.impl.event.init.MachineUtilsConfig;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
@@ -35,19 +35,19 @@ public final class AudioManager {
     }
 
     public static void initialize() {
-        MachineUtils.LOGGER.info("Loading sound manager...");
-        enabled = MachineUtils.generalConfig.soundsEnabled;
-        maxSourceCount = MachineUtils.generalConfig.soundSourceLimit;
+        MachineUtilsConfig.LOGGER.info("Loading sound manager...");
+        enabled = MachineUtilsConfig.generalConfig.soundsEnabled;
+        maxSourceCount = MachineUtilsConfig.generalConfig.soundSourceLimit;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            MachineUtils.LOGGER.warn("Running on a server! Disabling sounds.");
+            MachineUtilsConfig.LOGGER.warn("Running on a server! Disabling sounds.");
             enabled = false;
         }
         if (maxSourceCount <= 6) {
-            MachineUtils.LOGGER.warn("Max sound source count lower than 6! Disabling sounds.");
+            MachineUtilsConfig.LOGGER.warn("Max sound source count lower than 6! Disabling sounds.");
             enabled = false;
         }
         if (!enabled) {
-            MachineUtils.LOGGER.info("Sound manager is disabled in config. Disabling sounds.");
+            MachineUtilsConfig.LOGGER.info("Sound manager is disabled in config. Disabling sounds.");
             return;
         }
         int i = 0;
@@ -64,13 +64,13 @@ public final class AudioManager {
             }
             AL.destroy();
         } catch (Exception ignored) {
-            MachineUtils.LOGGER.info("An exception occurred while setting up the sound system. Disabling sounds.");
+            MachineUtilsConfig.LOGGER.info("An exception occurred while setting up the sound system. Disabling sounds.");
         }
         maxSourceCount = i;
         if (maxSourceCount < 6) {
             enabled = false;
         } else {
-            MachineUtils.LOGGER.info("Using " + maxSourceCount + " audio sources.");
+            MachineUtilsConfig.LOGGER.info("Using " + maxSourceCount + " audio sources.");
             SoundSystemConfig.setNumberStreamingChannels(streamingSourceCount);
             SoundSystemConfig.setNumberNormalChannels(maxSourceCount - streamingSourceCount);
         }

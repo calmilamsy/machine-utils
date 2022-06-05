@@ -1,6 +1,6 @@
 package net.glasslauncher.mod.machineutils.impl.common;
 
-import net.glasslauncher.mod.machineutils.api.energy.IChargeableItem;
+import net.glasslauncher.mod.machineutils.api.energy.ChargeableItem;
 import net.glasslauncher.mod.machineutils.api.item.BatteryArmour;
 import net.glasslauncher.mod.machineutils.mixin.common.LivingAccessor;
 import net.glasslauncher.mod.machineutils.api.item.Jetpack;
@@ -10,21 +10,19 @@ import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class MachineUtils {
 
-    public static boolean use(ItemInstance itemstack, int removedEnergy, PlayerBase entityplayer) {
-        if (((IChargeableItem) itemstack.getType()).getEnergy(itemstack) <= 0) {
-            return false;
-        }
-        if (PlatformUtils.isSimulating()) {
-            ((IChargeableItem) itemstack.getType()).addEnergy(itemstack, -removedEnergy);
-            chargeFromBatPack(itemstack, entityplayer);
-        }
-        return true;
+    /**
+     * Custom function for converting an JWJGL colour into minecraft's weird ARGB system.
+     * Uses AWT's Colour class because LWJGL's one doesn't exist on server, so it saves me a headache.
+     */
+    public static int getIntFromColour(Color colour) {
+        return ((colour.getAlpha() & 255) << 24) | ((colour.getRed() & 255) << 16) | ((colour.getGreen() & 255) << 8) | (colour.getBlue() & 255);
     }
 
     public static void chargeFromBatPack(ItemInstance itemstack, PlayerBase entityplayer) {
@@ -153,7 +151,7 @@ public class MachineUtils {
         return ((EntityBaseAccessor) entityplayer).getFallDistance();
     }
 
-    public static Map<PlayerBase, Boolean> playerIsjumping = new HashMap<>();
+    public static Map<PlayerBase, Boolean> playerIsJumping = new HashMap<>();
     public static Map<PlayerBase, Boolean> hoverMode = new HashMap<>();
     public static boolean getHoverMode(PlayerBase entityplayer) {
         return hoverMode.getOrDefault(entityplayer, false);
